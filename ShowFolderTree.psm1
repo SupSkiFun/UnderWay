@@ -22,41 +22,35 @@ Retrieve information for all folders (this may require a few minutes):
 SPECIFIC EXAMPLE HERE
 #>
 
-function GetSubFolder($fol) 
+function Show-Folder
 {
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true , ValueFromPipeline = $true)]
+        [VMware.VimAutomation.ViCore.Impl.V1.Inventory.FolderImpl[]]$Folder
+    )
     
-    
-    foreach ($sn in $fol)
+    Process
     {
-        $sne = $sn.ExtensionData
-        $fp = $sn.name
-        while ($sne.Parent)
+        foreach ($sn in $folder)
         {
-            $sne = Get-View $sne.Parent
-            $fp  = Join-Path -Path $sne.name -ChildPath $fp
+            $sne = $sn.ExtensionData
+            $fp = $sn.name
+            while ($sne.Parent)
+            {
+                $sne = Get-View $sne.Parent
+                $fp  = Join-Path -Path $sne.name -ChildPath $fp
+            }
+            
+            $lo = [PSCustomObject]@{
+                Name = $sn.Name
+                Id = $sn.id
+                Path = $fp
+                Type = $sn.Type
+            }
+            $lo
+            $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.VSphereFolderInfo')
         }
-        
-        $lo = [PSCustomObject]@{
-            Name = $sn.Name
-            Id = $sn.id
-            Path = $fp
-            Type = $sn.Type
-        }
-        $lo
-        $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.VSphereFolderInfo')
     }
 }
-
-#### Put in documentation / help / examples.  
-## Test more - email to Luc D?
-
-
-#$exNames = "Datacenters","vm","host"
-#$rf = get-folder -Name d* -Type VM
-#$rf = get-folder -Name d* #-Type VM
-#$rf =  get-folder -Name vm
-#$rf =  get-folder -Name Docker
-#$rf =  get-folder -Name VDI
-#$rf =  get-folder -Name *
-#$rf = Get-Folder -Name CORP
-#GetSubFolder($rf)
