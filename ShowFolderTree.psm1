@@ -2,7 +2,8 @@
 .SYNOPSIS
 Provides information on Vsphere Folders
 .DESCRIPTION
-Returns an object of Name, Id, Path, and Type for specified Vsphere Folders.
+Returns an object of Name, Id, Path, and Type for specified Vsphere Folders.  If multiple folders have the same name,
+they will all be returned with differing Ids and Paths listed.
 .PARAMETER Folder
 Output from VMWare PowerCLI Get-Folder.  See Examples.
 [VMware.VimAutomation.ViCore.Impl.V1.Inventory.FolderImpl]
@@ -13,13 +14,13 @@ VMWare PowerCLI Folder from Get-Folder:
 [pscustomobject] SupSkiFun.VSphereFolderInfo
 .EXAMPLE
 Retrieve information for one folder name:
-SPECIFIC EXAMPLE HERE
+Get-Folder -Name TEMP | Show-Folder
 .EXAMPLE
-Retrieve information for multiple folders:
-SPECIFIC EXAMPLE HERE
+Retrieve information for multiple folders, returning object into a variable:
+$myVar = Get-Folder -Name UAT , QA | Show-Folder
 .EXAMPLE
-Retrieve information for all folders (this may require a few minutes):
-SPECIFIC EXAMPLE HERE
+Retrieve information for all folders, returning object into a variable (this may require a few minutes):
+$MyVar = Get-Folder -Name * | Show-Folder
 #>
 
 function Show-Folder
