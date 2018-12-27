@@ -23,10 +23,10 @@ Retrieve information for all folders, returning object into a variable (this may
 $MyVar = Get-Folder -Name * | Show-Folder
 #>
 
-function Show-Folder
+Function Show-Folder
 {
     [CmdletBinding()]
-    param
+    Param
     (
         [Parameter(Mandatory = $true , ValueFromPipeline = $true)]
         [VMware.VimAutomation.ViCore.Impl.V1.Inventory.FolderImpl[]]$Folder
