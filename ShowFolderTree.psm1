@@ -14,16 +14,16 @@ VMWare PowerCLI Folder from Get-Folder:
 [pscustomobject] SupSkiFun.VSphereFolderInfo
 .EXAMPLE
 Retrieve information for one folder name:
-Get-Folder -Name TEMP | Show-Folder
+Get-Folder -Name TEMP | Show-FolderPath
 .EXAMPLE
 Retrieve information for multiple folders, returning object into a variable:
-$myVar = Get-Folder -Name UAT , QA | Show-Folder
+$myVar = Get-Folder -Name UAT , QA | Show-FolderPath
 .EXAMPLE
 Retrieve information for all folders, returning object into a variable (this may require a few minutes):
-$MyVar = Get-Folder -Name * | Show-Folder
+$MyVar = Get-Folder -Name * | Show-FolderPath
 #>
 
-Function Show-Folder
+Function Show-FolderPath
 {
     [CmdletBinding()]
     Param
