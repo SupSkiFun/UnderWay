@@ -31,7 +31,7 @@ function Show-Folder
         [Parameter(Mandatory = $true , ValueFromPipeline = $true)]
         [VMware.VimAutomation.ViCore.Impl.V1.Inventory.FolderImpl[]]$Folder
     )
-    
+
     Process
     {
         foreach ($sn in $folder)
@@ -43,7 +43,7 @@ function Show-Folder
                 $sne = Get-View $sne.Parent
                 $fp  = Join-Path -Path $sne.name -ChildPath $fp
             }
-            
+
             $lo = [PSCustomObject]@{
                 Name = $sn.Name
                 Id = $sn.id
