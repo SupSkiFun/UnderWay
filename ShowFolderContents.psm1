@@ -83,7 +83,6 @@ Function MakeHashT([string]$quoi)
                 "VMHost"
             )
 
-            #$trophash = @{}
             $script:trophash = @{}
             foreach ($ch in $chose)
             {
@@ -91,7 +90,6 @@ Function MakeHashT([string]$quoi)
                 $tropq = Invoke-Expression -Command ("Get-$ch  -Name *")
                 foreach ($tr in $tropq)
                 {
-                    #$trophash.add($tr.id , ($tr.name, $ch))
                     $script:trophash.add($tr.id , ($tr.name, $ch))
                 }
             }
@@ -113,13 +111,13 @@ VMWare PowerCLI Folder from Get-Folder:
 .OUTPUTS
 [pscustomobject] SupSkiFun.VSphereFolderInfo
 .EXAMPLE
-Retrieve information for one folder name:
+Retrieve contents for one folder name:
 Get-Folder -Name TEMP | Show-FolderContents
 .EXAMPLE
-Retrieve information for multiple folders, returning object into a variable:
+Retrieve contents for multiple folders, returning object into a variable:
 $myVar = Get-Folder -Name UAT , QA | Show-FolderContents
 .EXAMPLE
-Retrieve information for all folders, returning object into a variable (this may require a few minutes):
+Retrieve contents for all folders, returning object into a variable (this may require a few minutes):
 $MyVar = Get-Folder -Name * | Show-FolderContents
 #>
 
@@ -140,21 +138,28 @@ Function Show-FolderContents
     
     Process
     {
+        Function JuicyO ($p1 , $p2 , $p3 = $empty , $p4 = $empty , $p5 = $empty)
+        {
+            $lo = [PSCustomObject]@{
+
+                ItemName = $p3
+                ItemType = $p4
+                ItemId = $p5
+                FolderName = $p1
+                FolderID = $p2
+            }
+            $lo
+            $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.VSphereFolderInfo')
+        }
+
+
         foreach ($f in $folder)
         {
             $kids = $f.ExtensionData.ChildEntity
+            
             if(!($kids))
             {
-                # Make a seperate function here?
-                $lo = [PSCustomObject]@{
-                    FolderName = $f.Name
-                    FolderID = $f.Id
-                    ItemName = $empty
-                    ItemType = $empty
-                    ItemId = $empty
-                }
-                $lo
-                $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.VSphereFolderInfo')
+                JuicyO $f.name $f.id
             }
             
             else
@@ -162,61 +167,22 @@ Function Show-FolderContents
                 foreach ($k in $kids)
                 {
                     $k2 = $k.ToString()
+                    
                     if ($trophash.ContainsKey($k2))
                     {
                         $kname = $trophash.($k2)[0]
                         $ktype = $trophash.($k2)[1]                    
                     }
+                    
                     else
                     {
                         $kname = $k.Value
                         $ktype = $k.Type
                     }
                 
-                    # Make a seperate function here?
-                    $lo = [PSCustomObject]@{
-                        FolderName = $f.Name
-                        FolderID = $f.Id
-                        ItemName = $kname
-                        ItemType = $ktype
-                        ItemId = $k2
-                    }
-                    $lo
-                    $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.VSphereFolderInfo')
+                    JuicyO $f.name $f.id $kname $ktype $k2
                 }
             }
         }
     }
 }
-
-
-
-
-
-
-
-
-<#
- Process
-    {
-                $drule = Get-DrsRule -Cluster $Cluster
-                foreach ($rule in $drule)
-                {
-                        $vname = foreach ($vn in $rule.vmids)
-                        {
-                                $vmhash.$vn
-                        }
-                        $loopobj = [pscustomobject]@{
-                                Name = $rule.Name
-                                Cluster = $rule.cluster
-                                VMId = $rule.VMIds
-                                VM = $vname
-                                Type = $rule.Type
-                                Enabled = $rule.Enabled
-                        }
-                        $loopobj.PSObject.TypeNames.Insert(0,'SupSkiFun.DrsRuleInfo')
-                        $loopobj
-                        $vname = $null
-                }
-    }
-#>
