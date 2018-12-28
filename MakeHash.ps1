@@ -65,6 +65,13 @@ Function MakeHash([string]$quoi)
         
         'trop'
         {
+            <# 
+                Done this way as a template ID reflects a VM; e.g. VirtualMachine-vm-733 is the id for a template. To avoid confusion,
+                the specific command for each item is issued and then populates the hash with the specific type. 
+                The $chose values are used for both the Get command and assigning a type to the items.
+                Hash results in (Name = The Items Id) and (Value = The Items Name and Type) 
+            #>
+            
             $chose =
             (
                 "Cluster",
@@ -72,24 +79,20 @@ Function MakeHash([string]$quoi)
                 "DataStore",
                 "Folder",
                 "Template",
-                "VM"
+                "VM",
+                "VMHost"
             )
 
-            $trophash = @{}
-            #$script:trophash = @{}
+            $script:trophash = @{}
             foreach ($ch in $chose)
             {
+
                 $tropq = Invoke-Expression -Command ("Get-$ch  -Name *")
                 foreach ($tr in $tropq)
                 {
-                    $trophash.add($tr.id , ($tr.name, $ch))
-                    #$script:trophash.add($tr.id , ($tr.name, $ch))
+                    $script:trophash.add($tr.id , ($tr.name, $ch))
                 }
             }
-            $trophash
-            #$script:trophash  SHOULDN'T BE NEEDED
         }
 	}
 }
-
-MakeHash "trop"

@@ -95,8 +95,6 @@ Function MakeHashT([string]$quoi)
                     $script:trophash.add($tr.id , ($tr.name, $ch))
                 }
             }
-            #$trophash
-            #$script:trophash  SHOULDN'T BE NEEDED
         }
 	}
 }
@@ -105,7 +103,7 @@ Function MakeHashT([string]$quoi)
 .SYNOPSIS
 Provides contents of Vsphere Folders
 .DESCRIPTION
-Returns an object of FolderName, ItemName, ItemId, and ItemType of a Vsphere Folder's contents.  
+Returns an object of FolderName, FolderID, ItemName, ItemId, and ItemType of a Vsphere Folder's contents.  
 .PARAMETER Folder
 Output from VMWare PowerCLI Get-Folder.  See Examples.
 [VMware.VimAutomation.ViCore.Impl.V1.Inventory.FolderImpl]
@@ -136,8 +134,8 @@ Function Show-FolderContents
 
     Begin
     {
-        #  Just premake the hashes?  Or call from code if required?  MakeHash "vm"
         MakeHashT 'trop'
+        $empty = "Empty"
     }
     
     Process
@@ -145,28 +143,47 @@ Function Show-FolderContents
         foreach ($f in $folder)
         {
             $kids = $f.ExtensionData.ChildEntity
-            foreach ($k in $kids)
+            if(!($kids))
             {
-                $k2 = $k.ToString()
-                if ($trophash.ContainsKey($k2))
-                {
-                    $kname = $trophash.($k2)[0]
-                    $ktype = $trophash.($k2)[1]                    
-                }
-                else
-                {
-                    $kname = $k.Value
-                    $ktype = $k.Type
-                }
-                      
+                # Make a seperate function here?
                 $lo = [PSCustomObject]@{
                     FolderName = $f.Name
-                    ItemName = $kname
-                    ItemId = $kk
-                    ItemType = $ktype
+                    FolderID = $f.Id
+                    ItemName = $empty
+                    ItemType = $empty
+                    ItemId = $empty
                 }
                 $lo
                 $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.VSphereFolderInfo')
+            }
+            
+            else
+            {
+                foreach ($k in $kids)
+                {
+                    $k2 = $k.ToString()
+                    if ($trophash.ContainsKey($k2))
+                    {
+                        $kname = $trophash.($k2)[0]
+                        $ktype = $trophash.($k2)[1]                    
+                    }
+                    else
+                    {
+                        $kname = $k.Value
+                        $ktype = $k.Type
+                    }
+                
+                    # Make a seperate function here?
+                    $lo = [PSCustomObject]@{
+                        FolderName = $f.Name
+                        FolderID = $f.Id
+                        ItemName = $kname
+                        ItemType = $ktype
+                        ItemId = $k2
+                    }
+                    $lo
+                    $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.VSphereFolderInfo')
+                }
             }
         }
     }
