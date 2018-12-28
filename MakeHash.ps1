@@ -1,4 +1,4 @@
-# MakeHash is a helper which makes hash tables for VM or ESXi or DStore
+# MakeHash is a helper which makes hash tables for VM or ESXi or DStore or Folder or Cluster
 Function MakeHash([string]$quoi)
 {
 	switch ($quoi)
@@ -37,10 +37,11 @@ Function MakeHash([string]$quoi)
 					$d.id = $d.name
 				}
             }
+        }
 
         'fl'
         {
-            $flq = Get-Datastore -Name *
+            $flq = Get-Folder -Name *
             $flhash = @{}
             $script:flhash = foreach ($f in $flq)
             {
@@ -48,6 +49,47 @@ Function MakeHash([string]$quoi)
                     $f.id = $f.name
                 }
             }
-		}
+        }
+
+        'cl'
+        {
+            $clq = Get-Cluster -Name *
+            $clhash = @{}
+            $script:clhash = foreach ($c in $clq)
+            {
+                @{
+                    $c.id = $c.name
+                }
+            }
+        }
+        
+        'trop'
+        {
+            $chose =
+            (
+                "Cluster",
+                "DataCenter",
+                "DataStore",
+                "Folder",
+                "Template",
+                "VM"
+            )
+
+            $trophash = @{}
+            #$script:trophash = @{}
+            foreach ($ch in $chose)
+            {
+                $tropq = Invoke-Expression -Command ("Get-$ch  -Name *")
+                foreach ($tr in $tropq)
+                {
+                    $trophash.add($tr.id , ($tr.name, $ch))
+                    #$script:trophash.add($tr.id , ($tr.name, $ch))
+                }
+            }
+            $trophash
+            #$script:trophash  SHOULDN'T BE NEEDED
+        }
 	}
 }
+
+MakeHash "trop"

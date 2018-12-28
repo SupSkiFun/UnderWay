@@ -1,16 +1,111 @@
-ShowFolderContents
-Take folder input
-Parse by Type / calling MakeHash
-Returning an object
-Possible recurse option?
+# MakeHash is a helper which makes hash tables for VM or ESXi or DStore or Folder or Cluster
+Function MakeHashT([string]$quoi)
+{
+	switch ($quoi)
+	{
+		'vm'
+		{
+			$vmq = Get-VM -Name *
+			$vmhash = @{}
+			$script:vmhash = foreach ($v in $vmq)
+			{
+				@{
+					$v.id = $v.name
+				}
+			}
+		}
 
+		'ex'
+		{
+			$exq = Get-VMHost -Name *
+			$exhash = @{}
+			$script:exhash = foreach ($e in $exq)
+			{
+				@{
+					$e.id = $e.name
+				}
+			}
+		}
+
+		'ds'
+		{
+			$dsq = Get-Datastore -Name *
+			$dshash = @{}
+			$script:dshash = foreach ($d in $dsq)
+			{
+				@{
+					$d.id = $d.name
+				}
+            }
+        }
+
+        'fl'
+        {
+            $flq = Get-Folder -Name *
+            $flhash = @{}
+            $script:flhash = foreach ($f in $flq)
+            {
+                @{
+                    $f.id = $f.name
+                }
+            }
+        }
+
+        'cl'
+        {
+            $clq = Get-Cluster -Name *
+            $clhash = @{}
+            $script:clhash = foreach ($c in $clq)
+            {
+                @{
+                    $c.id = $c.name
+                }
+            }
+        }
+        
+        'trop'
+        {
+            <# 
+                Done this way as a template ID reflects a VM; e.g. VirtualMachine-vm-733 is the id for a template. To avoid confusion,
+                the specific command for each item is issued and then populates the hash with the specific type. 
+                The $chose values are used for both the Get command and assigning a type to the items.
+                Hash results in (Name = The Items Id) and (Value = The Items Name and Type) 
+            #>
+            
+            $chose =
+            (
+                "Cluster",
+                "DataCenter",
+                "DataStore",
+                "Folder",
+                "Template",
+                "VM",
+                "VMHost"
+            )
+
+            #$trophash = @{}
+            $script:trophash = @{}
+            foreach ($ch in $chose)
+            {
+
+                $tropq = Invoke-Expression -Command ("Get-$ch  -Name *")
+                foreach ($tr in $tropq)
+                {
+                    #$trophash.add($tr.id , ($tr.name, $ch))
+                    $script:trophash.add($tr.id , ($tr.name, $ch))
+                }
+            }
+            #$trophash
+            #$script:trophash  SHOULDN'T BE NEEDED
+        }
+	}
+}
 
 <#
 .SYNOPSIS
-Provides information on Vsphere Folders
+Provides contents of Vsphere Folders
 .DESCRIPTION
-Returns an object of Name, Id, Path, and Type for specified Vsphere Folders.  If multiple folders have the same name,
-they will all be returned with differing Ids and Paths listed.
+Returns an object of FolderName, ItemName, ItemId, and ItemType of a Vsphere Folder's contents.  
 .PARAMETER Folder
 Output from VMWare PowerCLI Get-Folder.  See Examples.
 [VMware.VimAutomation.ViCore.Impl.V1.Inventory.FolderImpl]
@@ -39,26 +134,40 @@ Function Show-FolderContents
         [VMware.VimAutomation.ViCore.Impl.V1.Inventory.FolderImpl[]]$Folder
     )
 
+    Begin
+    {
+        #  Just premake the hashes?  Or call from code if required?  MakeHash "vm"
+        MakeHashT 'trop'
+    }
+    
     Process
     {
-        foreach ($sn in $folder)
+        foreach ($f in $folder)
         {
-            $sne = $sn.ExtensionData
-            $fp = $sn.name
-            while ($sne.Parent)
+            $kids = $f.ExtensionData.ChildEntity
+            foreach ($k in $kids)
             {
-                $sne = Get-View $sne.Parent
-                $fp  = Join-Path -Path $sne.name -ChildPath $fp
+                $k2 = $k.ToString()
+                if ($trophash.ContainsKey($k2))
+                {
+                    $kname = $trophash.($k2)[0]
+                    $ktype = $trophash.($k2)[1]                    
+                }
+                else
+                {
+                    $kname = $k.Value
+                    $ktype = $k.Type
+                }
+                      
+                $lo = [PSCustomObject]@{
+                    FolderName = $f.Name
+                    ItemName = $kname
+                    ItemId = $kk
+                    ItemType = $ktype
+                }
+                $lo
+                $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.VSphereFolderInfo')
             }
-
-            $lo = [PSCustomObject]@{
-                Name = $sn.Name
-                Id = $sn.id
-                Path = $fp
-                Type = $sn.Type
-            }
-            $lo
-            $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.VSphereFolderInfo')
         }
     }
 }
