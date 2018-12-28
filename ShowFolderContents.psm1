@@ -62,16 +62,16 @@ Function MakeHashT([string]$quoi)
                 }
             }
         }
-        
+
         'trop'
         {
-            <# 
+            <#
                 Done this way as a template ID reflects a VM; e.g. VirtualMachine-vm-733 is the id for a template. To avoid confusion,
-                the specific command for each item is issued and then populates the hash with the specific type. 
+                the specific command for each item is issued and then populates the hash with the specific type.
                 The $chose values are used for both the Get command and assigning a type to the items.
-                Hash results in (Name = The Items Id) and (Value = The Items Name and Type) 
+                Hash results in (Name = The Items Id) and (Value = The Items Name and Type)
             #>
-            
+
             $chose =
             (
                 "Cluster",
@@ -101,7 +101,7 @@ Function MakeHashT([string]$quoi)
 .SYNOPSIS
 Provides contents of Vsphere Folders
 .DESCRIPTION
-Returns an object of FolderName, FolderID, ItemName, ItemId, and ItemType of a Vsphere Folder's contents.  
+Returns an object of FolderName, FolderID, ItemName, ItemId, and ItemType of a Vsphere Folder's contents.
 .PARAMETER Folder
 Output from VMWare PowerCLI Get-Folder.  See Examples.
 [VMware.VimAutomation.ViCore.Impl.V1.Inventory.FolderImpl]
@@ -112,16 +112,16 @@ VMWare PowerCLI Folder from Get-Folder:
 [pscustomobject] SupSkiFun.VSphereFolderInfo
 .EXAMPLE
 Retrieve contents for one folder name:
-Get-Folder -Name TEMP | Show-FolderContents
+Get-Folder -Name TEMP | Show-FolderContent
 .EXAMPLE
 Retrieve contents for multiple folders, returning object into a variable:
-$myVar = Get-Folder -Name UAT , QA | Show-FolderContents
+$myVar = Get-Folder -Name UAT , QA | Show-FolderContent
 .EXAMPLE
 Retrieve contents for all folders, returning object into a variable (this may require a few minutes):
-$MyVar = Get-Folder -Name * | Show-FolderContents
+$MyVar = Get-Folder -Name * | Show-FolderContent
 #>
 
-Function Show-FolderContents
+Function Show-FolderContent
 {
     [CmdletBinding()]
     Param
@@ -141,6 +141,9 @@ Function Show-FolderContents
         ##  Make a weird-ass-name for the hash as well.  Get-Random?  Actually won't work - how check for it if random?
         #MakeHashT 'trop'
 
+        ## OK this is getting ugly.  Psscript analyzer doesn't like a) the global variable and b) the invoke-expression.  
+        ## Revisit and fix
+
         TropHashSupSkiFun  - I like that!
 
         function ql  {$args}
@@ -148,11 +151,11 @@ Function Show-FolderContents
   $m = $l |get-random -count 12
 
         if ($trophash){"yes"} else {"no"}
-        
+
         #>
         $empty = "Empty"
     }
-    
+
     Process
     {
         Function JuicyO ($p1 , $p2 , $p3 = $empty , $p4 = $empty , $p5 = $empty)
@@ -173,30 +176,30 @@ Function Show-FolderContents
         foreach ($f in $folder)
         {
             $kids = $f.ExtensionData.ChildEntity
-            
+
             if(!($kids))
             {
                 JuicyO $f.name $f.id
             }
-            
+
             else
             {
                 foreach ($k in $kids)
                 {
                     $k2 = $k.ToString()
-                    
+
                     if ($trophash.ContainsKey($k2))
                     {
                         $kname = $trophash.($k2)[0]
-                        $ktype = $trophash.($k2)[1]                    
+                        $ktype = $trophash.($k2)[1]
                     }
-                    
+
                     else
                     {
                         $kname = $k.Value
                         $ktype = $k.Type
                     }
-                
+
                     JuicyO $f.name $f.id $kname $ktype $k2
                 }
             }

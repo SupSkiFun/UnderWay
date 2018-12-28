@@ -97,7 +97,6 @@ Function MakeHash([string]$quoi)
                     #$script:trophash.add($tr.id , ($tr.name, $ch))
                 }
             }
-            #New-Variable -Name $OhYes -Value $trophash -Scope Global
         }
 	}
 }
