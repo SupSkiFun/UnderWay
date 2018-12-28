@@ -70,6 +70,7 @@ Function MakeHash([string]$quoi)
                 the specific command for each item is issued and then populates the hash with the specific type. 
                 The $chose values are used for both the Get command and assigning a type to the items.
                 Hash results in (Name = The Items Id) and (Value = The Items Name and Type) 
+                'trop' hash is global scopre; all other are script scope.
             #>
             
             $chose =
@@ -82,17 +83,22 @@ Function MakeHash([string]$quoi)
                 "VM",
                 "VMHost"
             )
-
-            $script:trophash = @{}
+            
+            #$trophash = @{}
+            $Global:trophash = @{}
+            #$script:trophash = @{}
             foreach ($ch in $chose)
             {
 
                 $tropq = Invoke-Expression -Command ("Get-$ch  -Name *")
                 foreach ($tr in $tropq)
                 {
-                    $script:trophash.add($tr.id , ($tr.name, $ch))
+                    $trophash.add($tr.id , ($tr.name, $ch))
+                    #$script:trophash.add($tr.id , ($tr.name, $ch))
                 }
             }
+            #New-Variable -Name $OhYes -Value $trophash -Scope Global
         }
 	}
 }
+MakeHash 'trop'

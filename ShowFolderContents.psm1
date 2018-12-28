@@ -132,7 +132,24 @@ Function Show-FolderContents
 
     Begin
     {
-        MakeHashT 'trop'
+       <#
+        ##  Put in logic here to build the hash if it doesn't exist or if refresh is requested; actually to use
+        ##  a parameter I might need to put it in the process block.  Getting too complex?
+        ##  Which means a refresh parameter needs to be created.
+        ##  Which means that $folder mandatory should be set false and logic to catch no input created.
+        ##  Help needs to be updated with the above + examples to refresh the hash.
+        ##  Make a weird-ass-name for the hash as well.  Get-Random?  Actually won't work - how check for it if random?
+        #MakeHashT 'trop'
+
+        TropHashSupSkiFun  - I like that!
+
+        function ql  {$args}
+  25 $l = ql a b c d e f g h i j k l m n o p q r s t u v w x y z
+  $m = $l |get-random -count 12
+
+        if ($trophash){"yes"} else {"no"}
+        
+        #>
         $empty = "Empty"
     }
     
