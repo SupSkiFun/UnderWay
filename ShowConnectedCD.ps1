@@ -2,8 +2,8 @@
 .SYNOPSIS
 Shows VMs with CD Drives Connected or configured to Start Connected
 .DESCRIPTION
-Returns an object of VM, Name, StartConnected, Connected, AllowGuestControl, IsoPath, HostDevice and RemoteDevice 
-for submitted VMs that have a CD Drive Connected or configured to Start Connected.  Non-CD-Connected VMs are skipped. 
+Returns an object of VM, Name, StartConnected, Connected, AllowGuestControl, IsoPath, HostDevice and RemoteDevice
+for submitted VMs that have a CD Drive Connected or configured to Start Connected.  Non-CD-Connected VMs are skipped.
 .PARAMETER VM
 Output from VMWare PowerCLI Get-VM.  See Examples.
 [VMware.VimAutomation.ViCore.Impl.V1.VM.UniversalVirtualMachineImpl]
