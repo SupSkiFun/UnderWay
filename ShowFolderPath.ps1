@@ -51,7 +51,7 @@ Function Show-FolderPath
                 Type = $sn.Type
             }
             $lo
-            $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.VSphereFolderInfo')
+            $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.VSphereFolder.Info')
         }
     }
 }

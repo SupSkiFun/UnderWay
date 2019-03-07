@@ -2,8 +2,8 @@
 .SYNOPSIS
 Shows VMs with CD Drives Connected or configured to Start Connected
 .DESCRIPTION
-Returns an object of VM, Name, StartConnected, Connected, IsoPath, HostDevice and RemoteDevice for submitted 
-VMs that have a CD Drive Connected or configured to Start Connected.  Non-Connected VMs are skipped. 
+Returns an object of VM, Name, StartConnected, Connected, AllowGuestControl, IsoPath, HostDevice and RemoteDevice 
+for submitted VMs that have a CD Drive Connected or configured to Start Connected.  Non-CD-Connected VMs are skipped. 
 .PARAMETER VM
 Output from VMWare PowerCLI Get-VM.  See Examples.
 [VMware.VimAutomation.ViCore.Impl.V1.VM.UniversalVirtualMachineImpl]
@@ -32,13 +32,9 @@ Function Show-ConnectedCD
         [VMware.VimAutomation.ViCore.Impl.V1.VM.UniversalVirtualMachineImpl[]]$VM
     )
 
-    Begin
-    {
-        $x = Get-CDDrive -VM $vm
-    }
-
     Process
     {
+        $x = Get-CDDrive -VM $vm
         foreach ($y in $x)
         {
             if ($y.ConnectionState.StartConnected -or $y.ConnectionState.Connected)
@@ -48,6 +44,7 @@ Function Show-ConnectedCD
                     Name = $y.Name
                     StartConnected = $y.ConnectionState.StartConnected
                     Connected = $y.ConnectionState.Connected
+                    AllowGuestControl = $y.ConnectionState.AllowGuestControl
                     IsoPath = $y.isopath
                     HostDevice = $y.HostDevice
                     RemoteDevice = $y.RemoteDevice
