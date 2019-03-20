@@ -60,9 +60,9 @@ function Get-Info650
                     HbaDriverVersion = $v2.Version
                     HbaDriverDescription = $v2.Description
                     HbaDriverID = $v2.ID
-                }
-                $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.Info.650FLB')
-                $lo
+            }
+            $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.Info.650FLB')
+            $lo
         }
 
         foreach ($vmh in $VMHost)
