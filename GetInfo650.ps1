@@ -76,13 +76,13 @@ function Get-Info650
             if ($h1 -inotmatch $vend)
             {
                 $f1 = "Not Processed.  VendorName is $h1.  VendorName must match $vend."
-                JuicyO -dfirm $f1  -dnic $n1
+                JuicyO -dfirm $f1 -dnic $n1
             }
 
             elseif ($n1.Description -inotmatch $flex)
             {
                 $f1 = "Not Processed.  NicDescription does not match $flex."
-                JuicyO -dfirm $f1  -dnic $n1
+                JuicyO -dfirm $f1 -dnic $n1
             }
 
             else
@@ -91,7 +91,7 @@ function Get-Info650
                 $f1 = $c2.network.nic.get.Invoke($nic0).DriverInfo.FirmwareVersion
                 $v1 = $c2.software.vib.get.Invoke($vib1)
                 $v2 = $c2.software.vib.get.Invoke($vib2)
-                JuicyO -dfirm $f1 -dnic $n1 -dv1 $v1  -dv2 $v2
+                JuicyO -dfirm $f1 -dnic $n1 -dv1 $v1 -dv2 $v2
             }
         }
     }
