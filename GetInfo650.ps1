@@ -29,7 +29,7 @@ function Get-Info650
     [CmdletBinding()]
     param
     (
-		[Parameter(ValueFromPipeline = $true, Mandatory = $true)]
+        [Parameter(ValueFromPipeline = $true, Mandatory = $true)]
         [VMware.VimAutomation.ViCore.Impl.V1.Inventory.VMHostImpl[]]$VMHost
 	)
 
@@ -71,8 +71,8 @@ function Get-Info650
             $c2 = Get-EsxCli -V2 -VMHost $vmh
             $h1 = $c2.hardware.platform.get.Invoke().VendorName
             $n1 = $c2.network.nic.list.invoke() |
-                Select-Object -First 1    
-            
+                Select-Object -First 1
+
             if ($h1 -inotmatch $vend)
             {
                 $f1 = "Not Processed.  VendorName is $h1.  VendorName must match $vend."
@@ -93,7 +93,6 @@ function Get-Info650
                 $v2 = $c2.software.vib.get.Invoke($vib2)
                 JuicyO $f1 $n1 $v1 $v2   # paramaterize this?
             }
-
         }
     }
 }
