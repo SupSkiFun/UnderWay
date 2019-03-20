@@ -35,31 +35,31 @@ function Get-Info650
 
     begin
     {
-        $vend = "HP"
-        $flex = "650FLB"
-        $vib1 = @{"vibname" = "elxnet"}
-        $vib2 = @{"vibname" = "brcmfcoe"}
+        $vend = "HP"                            # Used to only query HP/HPe systems.
+        $flex = "650FLB"                        # Used to query only 650FLB NICs
+        $vib1 = @{"vibname" = "elxnet"}         # Vib to Query
+        $vib2 = @{"vibname" = "brcmfcoe"}       # Vib to Query
     }
 
     process
     {
         Function JuicyO
         {
-            param ($f1, $n1, $v1, $v2)
+            param ($dfirm, $dnic, $dv1, $dv2)
 
             $lo = [pscustomobject]@{
                     HostName = $vmh.Name
-                    FirmwareVersion = $f1
-                    NicName = $n1.Name
-                    NicDescription = $n1.Description
-                    NicDriverName = $v1.Name
-                    NicDriverVersion = $v1.Version
-                    NicDriverDescription = $v1.Description
-                    NicDriverID = $v1.ID
-                    HbaDriverName = $v2.Name
-                    HbaDriverVersion = $v2.Version
-                    HbaDriverDescription = $v2.Description
-                    HbaDriverID = $v2.ID
+                    FirmwareVersion = $dfirm
+                    NicName = $dnic.Name
+                    NicDescription = $dnic.Description
+                    NicDriverName = $dv1.Name
+                    NicDriverVersion = $dv1.Version
+                    NicDriverDescription = $dv1.Description
+                    NicDriverID = $dv1.ID
+                    HbaDriverName = $dv2.Name
+                    HbaDriverVersion = $dv2.Version
+                    HbaDriverDescription = $dv2.Description
+                    HbaDriverID = $dv2.ID
             }
             $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.Info.650FLB')
             $lo
@@ -76,13 +76,13 @@ function Get-Info650
             if ($h1 -inotmatch $vend)
             {
                 $f1 = "Not Processed.  VendorName is $h1.  VendorName must match $vend."
-                JuicyO $f1 $n1
+                JuicyO -dfirm $f1  -dnic $n1
             }
 
             elseif ($n1.Description -inotmatch $flex)
             {
                 $f1 = "Not Processed.  NicDescription does not match $flex."
-                JuicyO $f1 $n1
+                JuicyO -dfirm $f1  -dnic $n1
             }
 
             else
@@ -91,7 +91,7 @@ function Get-Info650
                 $f1 = $c2.network.nic.get.Invoke($nic0).DriverInfo.FirmwareVersion
                 $v1 = $c2.software.vib.get.Invoke($vib1)
                 $v2 = $c2.software.vib.get.Invoke($vib2)
-                JuicyO $f1 $n1 $v1 $v2   # paramaterize this?
+                JuicyO -dfirm $f1 -dnic $n1 -dv1 $v1  -dv2 $v2
             }
         }
     }
