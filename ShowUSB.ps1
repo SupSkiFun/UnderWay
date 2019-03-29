@@ -26,14 +26,14 @@ function Show-USBController
         [Parameter(Mandatory = $true , ValueFromPipeline = $true)]
         [VMware.VimAutomation.ViCore.Impl.V1.VM.UniversalVirtualMachineImpl[]]$VM
     )
- 
+
     Process
     {
         foreach ($v in $VM)
         {
             if ($v.ExtensionData.Config.Hardware.Device.deviceinfo.label -imatch "USB")
             {
-                $usbd = ($v.ExtensionData.Config.Hardware.Device.deviceinfo | 
+                $usbd = ($v.ExtensionData.Config.Hardware.Device.deviceinfo |
                     Where-Object -Property label -match "USB").label
 
                     $lo = [pscustomobject]@{
@@ -42,7 +42,7 @@ function Show-USBController
 					VMHost = $v.VMHost
 					USB = $usbd
                 }
-                
+
                 $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.USB.Info')
                 $lo
             }
