@@ -31,10 +31,11 @@ function Show-USBController
     {
         foreach ($v in $VM)
         {
+            # Is the below redundant?  Maybe just assign to a variable, then if exist?
             if ($v.ExtensionData.Config.Hardware.Device.deviceinfo.label -imatch "USB")
             {
                 $usbd = ($v.ExtensionData.Config.Hardware.Device.deviceinfo |
-                    Where-Object -Property label -match "USB").label
+                    Where-Object -Property label -imatch "USB").label
 
                     $lo = [pscustomobject]@{
 					VM = $v.Name
