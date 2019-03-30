@@ -38,7 +38,7 @@ function Show-USBController
         {
             $usbd = ($v.ExtensionData.Config.Hardware.Device.deviceinfo |
                 Where-Object -Property label -imatch "USB").label           
-            if ($usbd -imatch "USB")
+            if ($usbd)
             {
                 $lo = [pscustomobject]@{
 					VM = $v.Name
