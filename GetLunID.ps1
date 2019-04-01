@@ -72,13 +72,13 @@ function Get-DataStoreLunIDTest
     [Parameter(ValueFromPipeline=$true, Mandatory = $true)]
 	[VMware.VimAutomation.ViCore.Types.V1.DatastoreManagement.VmfsDatastore[]]$Name
 	)
-  
+
     Process
     {
-		function MakeObj 
+		function MakeObj
 		{
         param ($lun, $luninfo=$null)
-        
+
         $loopobj = [pscustomobject]@{
             Name = $n.Name
             Lun = $lun
@@ -90,9 +90,9 @@ function Get-DataStoreLunIDTest
         $loopobj.PSObject.TypeNames.Insert(0,'SupSkiFun.LUNinfo')
         $loopobj
 		}
-		
+
         MakeHash "ex"
-        
+
 		foreach ($n in $name)
 		{
             $ds, $e2, $hs, $li, $ld = $null
@@ -104,9 +104,18 @@ function Get-DataStoreLunIDTest
                 {
                     $ds = $n.ExtensionData.Info.Vmfs.Extent[0].DiskName
                     $li = $e2.storage.nmp.device.list.Invoke((@{'device'=$ds}))
-                    $ld = $li.WorkingPaths[0].ToString().Split(":")[3].Replace("L","")
+
+                    if ($li.WorkingPaths.count -eq 1)
+                    {
+                        $ld = $li.WorkingPaths.ToString().Split(":")[3].Replace("L","")
+                    }
+                    else
+                    {
+                        $ld = $li.WorkingPaths[0].ToString().Split(":")[3].Replace("L","")
+                    }
+
                     MakeObj -lun $ld -luninfo $li
-                    break                    
+                    break
                 }
 
                 $ld = "Error Connecting to VMHosts"
