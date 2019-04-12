@@ -40,6 +40,11 @@ $comObj = Get-VMHostSetting -VMHost ESXi777 -Credential $creds
 
 Compare-VMHostSetting -Reference $refObj -Comparison $comObj
 
+Note - if objects are embedded in the baseline, use Export-Clixml:
+
+Export Baseline:  $FCbaseline | Export-Csv D:\6.7\FCaseline.csv
+
+
 .LINK
 Get-VMHostSetting
 #>
