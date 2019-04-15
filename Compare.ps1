@@ -21,6 +21,7 @@ Create Baseline:  $baseline = Get-VMHostSetting -VMHost ESXi03 -Credential $cred
 Modify Baseline:
     ($baseline| ? Name -eq LicenseKey).Value = "Removed"
     ($baseline| ? Name -eq Syslog.global.logHost).Value = "Varies"
+    $baseline | % {$_.HostName="BaseLine"}
 
 Create Comparison Object:  $comObj = Get-VMHostSetting -VMHost ESXi777 -Credential $creds
 
@@ -40,9 +41,17 @@ $comObj = Get-VMHostSetting -VMHost ESXi777 -Credential $creds
 
 Compare-VMHostSetting -Reference $refObj -Comparison $comObj
 
+===============
+
 Note - if objects are embedded in the baseline, use Export-Clixml:
 
-Export Baseline:  $FCbaseline | Export-Csv D:\6.7\FCaseline.csv
+$i7 = gvs -VMHost FChost -Credentials $creds
+
+Export Baseline:  $FCbaseline | Export-Clixml D:\6.7\FCaseline.csv
+
+Import Baseline:  $refObj = Import-Clixml D:\Apr2019Recipe\Gen9FcBase.xml
+
+Compare-VMHostSetting -Reference $refobj -Comparison $i7
 
 
 .LINK
