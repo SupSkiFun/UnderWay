@@ -84,12 +84,13 @@ function Install-VIBTest
             if($PSCmdlet.ShouldProcess("$vmhost installing $URL"))
             {
                 Import-Module PSWorkflow
+                $vcenter = $DefaultVIServer
                 workflow InstVibPar
                 {
                     param (
                         [string]$vcenter,
                         [string[]]$names,
-                        [string[]]$uri,
+                        [string[]]$url,
                         [string]$session
                      )
 
@@ -97,7 +98,8 @@ function Install-VIBTest
                      {
                         InlineScript
                         {
-                            $cible = @{viburl = $Using:uri}
+                            [string[]]$uu = $Using:url  # Necessary or WorkFlow would fail with -gt 1 vib
+                            $cible = @{viburl = $uu}
                             Connect-VIServer -Server $Using:vcenter -Session $Using:session |
                                 Out-Null
                             $xcli = Get-EsxCli -VMHost $Using:name -V2
@@ -110,7 +112,8 @@ function Install-VIBTest
                         }
                     }
                 }
-                $ir = InstVibPar -names $vmhost.name -vcenter $global:DefaultVIServer.Name -session $global:DefaultVIServer.SessionSecret -uri $url
+                $ir = InstVibPar -names $vmhost.Name -vcenter $vcenter.Name -session $vcenter.SessionSecret -url $URL
+                #$ir = InstVibPar -names $vmhost.name -vcenter $global:DefaultVIServer.Name -session $global:DefaultVIServer.SessionSecret -uri $url
                 #MakeObj -vhdata $ir.HostName -resdata $ir.Response
                 foreach ($i in $ir)
                 {

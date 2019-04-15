@@ -83,12 +83,13 @@ function Update-VIBTest
             if($PSCmdlet.ShouldProcess("$vmhost updating $URL"))
             {
                 Import-Module PSWorkflow
+                $vcenter = $DefaultVIServer
                 workflow UpVibPar
                 {
                     param (
                         [string]$vcenter,
                         [string[]]$names,
-                        [string[]]$uri,
+                        [string[]]$url,
                         [string]$session
                      )
 
@@ -96,7 +97,7 @@ function Update-VIBTest
                      {
                         InlineScript
                         {
-                            [string[]]$uu = $Using:uri
+                            [string[]]$uu = $Using:url  # Necessary or WorkFlow would fail with -gt 1 vib
                             $cible = @{viburl = $uu}
                             Connect-VIServer -Server $Using:vcenter -Session $Using:session |
                                 Out-Null
@@ -110,7 +111,7 @@ function Update-VIBTest
                         }
                     }
                 }
-                $ir = UpVibPar -names $vmhost.name -vcenter $global:DefaultVIServer.Name -session $global:DefaultVIServer.SessionSecret -uri $url
+                $ir = UpVibPar -names $vmhost.Name -vcenter $vcenter.Name -session $vcenter.SessionSecret -url $url
                 #MakeObj -vhdata $ir.HostName -resdata $ir.Response
                 foreach ($i in $ir)
                 {
