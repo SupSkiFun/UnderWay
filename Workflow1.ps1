@@ -60,7 +60,7 @@ function Test-Vib2 {
                 $y = $x.system.version.get.Invoke()
 
                 $lo = [PSCustomObject]@{
-                    HostName = $x.system.hostname.get.invoke().HostName
+                    HostName = $z = 
                     Build = $y.Build
                     Version = $y.version
                 }
