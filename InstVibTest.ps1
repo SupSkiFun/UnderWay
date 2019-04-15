@@ -9,9 +9,9 @@ Output from VMWare PowerCLI Get-VMHost.  See Examples.
 .PARAMETER URL
 URL(s) for the VIB(s).  https://www.example.com/VMware_bootbank_vsanhealth_6.5.0-2.57.9183449.vib , https://www.example.com/NetAppNasPlugin.v23.vib
 .PARAMETER Parallel
-If selected, will run the installations in parallel via a PowerShell WorkFlow.  Recommended when installing against many hosts (5 or more)
-and/or if the installation runs for several minutes or longer.  For swift installs on a few hosts, parallel *could* actually take longer.
-Test / verify against the number of hosts and the install type.
+If selected, will run the installations in parallel via a PowerShell WorkFlow.  If not selected, hosts will be processed serially.
+Recommended when updating against many hosts (5 or more) and/or if the update runs for several minutes or longer.
+For swift updates on a few hosts, parallel *could* actually take longer.  Test / verify against the number of hosts and the update type.
 .INPUTS
 VMWare PowerCLI VMHost from Get-VMHost:
 [VMware.VimAutomation.ViCore.Types.V1.Inventory.VMHost]
@@ -25,6 +25,10 @@ $MyVar = Get-VMHost -Name ESX02 | Install-VIB -URL $u
 Install two VIBs to two VMHosts, returning an object into a variable:
 $uu = 'https://www.example.com/VMware_bootbank_vsanhealth_6.5.0-2.57.9183449.vib' , 'https://www.example.com/NetAppNasPlugin.v23.vib'
 $MyVar = Get-VMHost -Name ESX03 , ESX04 | Install-VIB -URL $uu
+.EXAMPLE
+Install four VIBs to twenty-five VMHosts in parallel, returning an object into a variable:
+$vv = 'https://www.example.com/Patch01.vib','https://www.example.com/Patch02.vib','https://www.example.com/Patch04.vib','https://www.example.com/Patch04.vib'
+$MyVar = Get-VMHost -Name ESX[16-40] | Install-VIB -URL $vv -Parallel
 #>
 function Install-VIBTest
 {
@@ -94,7 +98,8 @@ function Install-VIBTest
                         InlineScript
                         {
                             $cible = @{viburl = $Using:uri}
-                            Connect-VIServer -Server $Using:vcenter -Session $Using:session | Out-Null
+                            Connect-VIServer -Server $Using:vcenter -Session $Using:session |
+                                Out-Null
                             $xcli = Get-EsxCli -VMHost $Using:name -V2
                             $resp = $xcli.software.vib.install.invoke($Using:cible)
                             $resObj = [PSCustomObject]@{
