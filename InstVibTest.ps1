@@ -9,8 +9,9 @@ Output from VMWare PowerCLI Get-VMHost.  See Examples.
 .PARAMETER URL
 URL(s) for the VIB(s).  https://www.example.com/VMware_bootbank_vsanhealth_6.5.0-2.57.9183449.vib , https://www.example.com/NetAppNasPlugin.v23.vib
 .PARAMETER Parallel
-If selected, will run the installation in parallel via a PowerShell WorkFlow.  Recommended when installing against many hosts (5 or more)
-and/or if the installation runs for several minutes.  For swift installs on a few hosts, parallel *could* actually take longer.  Test / verify.
+If selected, will run the installations in parallel via a PowerShell WorkFlow.  Recommended when installing against many hosts (5 or more)
+and/or if the installation runs for several minutes or longer.  For swift installs on a few hosts, parallel *could* actually take longer.
+Test / verify against the number of hosts and the install type.
 .INPUTS
 VMWare PowerCLI VMHost from Get-VMHost:
 [VMware.VimAutomation.ViCore.Types.V1.Inventory.VMHost]
@@ -59,54 +60,57 @@ function Install-VIBTest
             $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.VIBinfo')
             $lo
         }
-            
+
         if(!($parallel))
         {
             $cible = @{viburl = $URL}
-            if($PSCmdlet.ShouldProcess("$vmh installing $URL"))
+            foreach ($vmh in $VMHost)
             {
-                foreach ($vmh in $VMHost)
+                if($PSCmdlet.ShouldProcess("$vmh installing $URL"))
                 {
                     $xcli = Get-EsxCli -v2 -VMHost $vmh
                     $resp = $xcli.software.vib.install.invoke($cible)
-                    MakeObj -vmhdata $vmh -resdata $resp
+                    MakeObj -vhdata $vmh.Name -resdata $resp
                 }
             }
         }
 
         elseif($parallel)
         {
-            $cible = @{viburl = $URL}
-            if($PSCmdlet.ShouldProcess("$vmh installing $URL"))
+            if($PSCmdlet.ShouldProcess("$vmhost installing $URL"))
             {
                 Import-Module PSWorkflow
-                workflow InstVibPar 
+                workflow InstVibPar
                 {
                     param (
                         [string]$vcenter,
                         [string[]]$names,
-                        [hashtable[]]$cible,
+                        [string[]]$uri,
                         [string]$session
                      )
-               
+
                     foreach -parallel($name in $names)
                      {
                         InlineScript
                         {
+                            $cible = @{viburl = $Using:uri}
                             Connect-VIServer -Server $Using:vcenter -Session $Using:session | Out-Null
                             $xcli = Get-EsxCli -VMHost $Using:name -V2
-                            $resp = $xcli.software.vib.install.invoke($using:cible)
-               
+                            $resp = $xcli.software.vib.install.invoke($Using:cible)
                             $resObj = [PSCustomObject]@{
-                                HostName = $xcli.system.hostname.get.invoke().HostName
+                                HostName = $Using:name
                                 Response = $resp
                              }
                             $resObj
                         }
                     }
                 }
-                $ir = InstVibPar -names $vmhost.name -vcenter $global:DefaultVIServer.Name -session $global:DefaultVIServer.SessionSecret -cible $cible
-                MakeObj -vhdata $ir.HostName -resdata $ir.Response
+                $ir = InstVibPar -names $vmhost.name -vcenter $global:DefaultVIServer.Name -session $global:DefaultVIServer.SessionSecret -uri $url
+                #MakeObj -vhdata $ir.HostName -resdata $ir.Response
+                foreach ($i in $ir)
+                {
+                    MakeObj -vhdata $i.HostName -resdata $i.Response
+                }
             }
         }
     }

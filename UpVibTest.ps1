@@ -8,6 +8,10 @@ Output from VMWare PowerCLI Get-VMHost.  See Examples.
 [VMware.VimAutomation.ViCore.Types.V1.Inventory.VMHost]
 .PARAMETER URL
 URL(s) for the VIB(s).  https://www.example.com/VMware_bootbank_vsanhealth_6.5.0-2.57.9183449.vib , https://www.example.com/VMware_bootbank_esx-base_6.7.0-0.20.9484548
+.PARAMETER Parallel
+If selected, will run the updates in parallel via a PowerShell WorkFlow.  Recommended when updating against many hosts (5 or more)
+and/or if the update runs for several minutes or longer.  For swift updates on a few hosts, parallel *could* actually take longer.
+Test / verify against the number of hosts and the update type.
 .INPUTS
 VMWare PowerCLI VMHost from Get-VMHost:
 [VMware.VimAutomation.ViCore.Types.V1.Inventory.VMHost]
@@ -22,7 +26,7 @@ Update two VIBs on two VMHosts, returning an object into a variable:
 $uu = 'https://www.example.com/VMware_bootbank_vsanhealth_6.5.0-2.57.9183449.vib' , 'https://www.example.com/VMware_bootbank_esx-base_6.7.0-0.20.9484548'
 $MyVar = Get-VMHost -Name ESX03 , ESX04 | Install-VIB -URL $uu
 #>
-function Update-VIB
+function Update-VIBTest
 {
     [CmdletBinding(SupportsShouldProcess=$true,
     ConfirmImpact='high')]
@@ -33,28 +37,79 @@ function Update-VIB
         [VMware.VimAutomation.ViCore.Types.V1.Inventory.VMHost[]]$VMHost,
 
         [Parameter(Mandatory=$true)]
-        [string[]]$URL
+        [string[]]$URL,
+
+        [switch]$Parallel
     )
 
     Process
     {
-        foreach ($vmh in $VMHost)
+        Function MakeObj
+        {
+            param($vhdata,$resdata)
+
+            $lo = [PSCustomObject]@{
+                HostName = $vhdata
+                Message = $resdata.Message
+                RebootRequired = $resdata.RebootRequired
+                VIBsInstalled = $resdata.VIBsInstalled
+                VIBsRemoved = $resdata.VIBsRemoved
+                VIBsSkipped = $resdata.VIBsSkipped
+            }
+            $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.VIBinfo')
+            $lo
+        }
+
+        if(!($parallel))
         {
             $cible = @{viburl = $URL}
-            if($PSCmdlet.ShouldProcess("$vmh updating $URL"))
+            foreach ($vmh in $VMHost)
             {
-                $xcli = get-esxcli -v2 -VMHost $vmh
-                $res = $xcli.software.vib.update.invoke($cible)
-                $lo = [PSCustomObject]@{
-                  HostName = $vmh
-                  Message = $res.Message
-                  RebootRequired = $res.RebootRequired
-                  VIBsInstalled = $res.VIBsInstalled
-                  VIBsRemoved = $res.VIBsRemoved
-                  VIBsSkipped = $res.VIBsSkipped
-              }
-              $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.VIBinfo')
-              Write-Output $lo
+                if($PSCmdlet.ShouldProcess("$vmh installing $URL"))
+                {
+                    $xcli = Get-EsxCli -v2 -VMHost $vmh
+                    $resp = $xcli.software.vib.update.invoke($cible)
+                    MakeObj -vhdata $vmh.Name -resdata $resp
+                }
+            }
+        }
+
+        elseif($parallel)
+        {
+            if($PSCmdlet.ShouldProcess("$vmhost updating $URL"))
+            {
+                Import-Module PSWorkflow
+                workflow UpVibPar
+                {
+                    param (
+                        [string]$vcenter,
+                        [string[]]$names,
+                        [string[]]$uri,
+                        [string]$session
+                     )
+
+                    foreach -parallel($name in $names)
+                     {
+                        InlineScript
+                        {
+                            $cible = @{viburl = $Using:uri}
+                            Connect-VIServer -Server $Using:vcenter -Session $Using:session | Out-Null
+                            $xcli = Get-EsxCli -VMHost $Using:name -V2
+                            $resp = $xcli.software.vib.update.invoke($Using:cible)
+                            $resObj = [PSCustomObject]@{
+                                HostName = $Using:name
+                                Response = $resp
+                             }
+                            $resObj
+                        }
+                    }
+                }
+                $ir = UpVibPar -names $vmhost.name -vcenter $global:DefaultVIServer.Name -session $global:DefaultVIServer.SessionSecret -uri $url
+                #MakeObj -vhdata $ir.HostName -resdata $ir.Response
+                foreach ($i in $ir)
+                {
+                    MakeObj -vhdata $i.HostName -resdata $i.Response
+                }
             }
         }
     }
