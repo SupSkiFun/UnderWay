@@ -107,7 +107,7 @@ function Install-VIBTest
                             $resObj = [PSCustomObject]@{
                                 HostName = $Using:name
                                 Response = $resp
-                             }
+                            }
                             $resObj
                         }
                     }

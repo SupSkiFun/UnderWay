@@ -1,31 +1,33 @@
 $c = (get-vmhost *).Name
 
-workflow Test-Vib {
-         param (
-             [string]$vcenter,
-             [string[]]$names,
-             [string]$session
-          )
-    
-         foreach -parallel($name in $names)
-          {
-             InlineScript
-             {
-                 Connect-VIServer -Server $Using:vcenter -Session $Using:session | Out-Null
-                 $x = Get-Esxcli -VMHost $Using:name -V2
-                 $y = $x.system.version.get.Invoke()
-    
-                 $lo = [PSCustomObject]@{
-                     HostName = $x.system.hostname.get.invoke().HostName
-                     Build = $y.Build
-                     Version = $y.version
-                 }
-    
-                 # return $lo
-                 $lo
-             }
-         }
-     }
+workflow Test-Vib 
+{
+    param 
+    (
+        [string]$vcenter,
+        [string[]]$names,
+        [string]$session
+    )
+
+    foreach -parallel($name in $names)
+    {
+        InlineScript
+        {
+            Write-Host " Starting $using:Name"
+            Connect-VIServer -Server $Using:vcenter -Session $Using:session | Out-Null
+            $x = Get-Esxcli -VMHost $Using:name -V2
+            $y = $x.system.version.get.Invoke()
+
+            $lo = [PSCustomObject]@{
+                HostName = $x.system.hostname.get.invoke().HostName
+                Build = $y.Build
+                Version = $y.version
+            }
+            # return $lo
+            $lo
+        }
+    }
+}
 
 
 Function abc {
