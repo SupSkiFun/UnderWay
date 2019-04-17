@@ -24,15 +24,14 @@ $MyVar = Get-VMHost -Name ESX03 , ESX04 | Install-VIB -URL $uu
 #>
 function Install-VIBTest
 {
-    [CmdletBinding(SupportsShouldProcess=$true,
-    ConfirmImpact='high')]
+    [CmdletBinding(SupportsShouldProcess = $true , ConfirmImpact = 'high')]
 
     Param
     (
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [VMware.VimAutomation.ViCore.Types.V1.Inventory.VMHost[]]$VMHost,
 
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [string[]]$URL
     )
 
