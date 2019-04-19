@@ -1,49 +1,48 @@
 <#
 .SYNOPSIS
-Start a Recovery Plan action like test, recovery, cleanup, etc.
-
+Starts the SRM Cleanup Process.
+.DESCRIPTION
+Starts the SRM Cleanup Process for specified SRM Recovery Plans.
+Does not attempt if submitted plan is not in a NeedsCleanup state.
 .PARAMETER RecoveryPlan
-The recovery plan to start
-
-.PARAMETER RecoveryMode
-The recovery mode to invoke on the plan. May be one of "Test", "Cleanup", "Failover", "Migrate", "Reprotect"
+SRM Recovery Plan.  VMware.VimAutomation.Srm.Views.SrmRecoveryPlan
+.EXAMPLE
+Get-SRMRecoveryPlan is from module Meadowcroft.Srm.  However, any object containing an SRMRecoveryPlan will work.
+$p = Get-SRMRecoveryPlan -Name XYZ
+$p | Start-SRMCleanUp
 #>
-Function Start-RPCleaning
+Function Start-SRMCleanUp
 {
     [cmdletbinding(SupportsShouldProcess = $True , ConfirmImpact = "High")]
     Param
     (
-        [Parameter (Mandatory=$true, ValueFromPipeline=$true, Position=1)][VMware.VimAutomation.Srm.Views.SrmRecoveryPlan[]] $RecoveryPlan
+        [Parameter (Mandatory = $true , ValueFromPipeline = $true )]
+        [VMware.VimAutomation.Srm.Views.SrmRecoveryPlan[]] $RecoveryPlan
     )
 
     Begin
     {
         [VMware.VimAutomation.Srm.Views.SrmRecoveryPlanRecoveryMode] $RecoveryMode = [VMware.VimAutomation.Srm.Views.SrmRecoveryPlanRecoveryMode]::CleanUpTest
+        $ReqState = "NeedsCleanup"
     }
 
-    Process 
+    Process
     {
         foreach ($rp in $RecoveryPlan)
         {
             $rpinfo = $rp.GetInfo()
-           
-            if ($pscmdlet.ShouldProcess($rpinfo.Name, $RecoveryMode)) 
+
+            if ($pscmdlet.ShouldProcess($rpinfo.Name, $RecoveryMode))
             {
-                if ($rpinfo.State -eq "NeedsCleanup")
+                if ($rpinfo.State -eq $ReqState)
                 {
                     $RecoveryPlan.Start($RecoveryMode)
-                    <#
-                    Write-Output "Simulating Start"
-                    "Name $($rpinfo.Name)"
-                    "State $($rpinfo.State)"
-                    "Recovery Mode $RecoveryMode"
-                    $RecoveryMode
-                    #>
                 }
 
-                else 
+                else
                 {
-                    Write-Output "Not Starting Cleanup for $($rpinfo.Name).  State is $($rpinfo.State).  State should be NeedsCleanup."
+                    $mesg = "Not Sending dismissal for $($rpinfo.Name).  State is $($rpinfo.State).  State should be $ReqState."
+                    Write-Output "`n`t`t$mesg`n"
                 }
             }
         }
