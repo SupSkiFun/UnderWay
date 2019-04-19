@@ -7,14 +7,18 @@ Does not attempt if submitted plan is not in a Ready state.
 .PARAMETER RecoveryPlan
 SRM Recovery Plan.  VMware.VimAutomation.Srm.Views.SrmRecoveryPlan
 .PARAMETER SyncData
-Defaults to False.  Can be set True to Sync Data.
+Future:  Defaults to False.  Can be set True to Sync Data.  Believe exposed in SRM 6.5 API
 .EXAMPLE
 Get-SRMRecoveryPlan is from module Meadowcroft.Srm.  However, any object containing an SRMRecoveryPlan will work.
 $p = Get-SRMRecoveryPlan -Name XYZ
-$p | Start-SRMRecoveryPlanTest
+$p | Start-SRMTest
+.EXAMPLE
+Future Functionality Below:
+$p = Get-SRMRecoveryPlan -Name XYZ
+$p | Start-SRMTest -SyncData=$False
 #>
 
-Function Start-SRMRecoveryPlanTest
+Function Start-SRMTest
 {
     [cmdletbinding(SupportsShouldProcess = $True , ConfirmImpact = "High")]
     Param
@@ -28,9 +32,15 @@ Function Start-SRMRecoveryPlanTest
     Begin
     {
         [VMware.VimAutomation.Srm.Views.SrmRecoveryPlanRecoveryMode] $RecoveryMode = [VMware.VimAutomation.Srm.Views.SrmRecoveryPlanRecoveryMode]::Test
+        $ReqState = "Ready"
+
+        <#
+        Below two lines for creating the option to synch or not.  Believe exposed in SRM 6.5 API
+        Also modify the entry in the process block.
         $rpOpt = New-Object VMware.VimAutomation.Srm.Views.SrmRecoveryOptions
         $rpOpt.SyncData = $False
-        $ReqState = "Ready"
+        #>
+
     }
 
     Process
@@ -43,32 +53,17 @@ Function Start-SRMRecoveryPlanTest
             {
                 if ($rpinfo.State -eq $ReqState)
                 {
-                    <#  Actual execution  Steps Below
-
-                    Try with SyncData Set - if failure
-                    Just run without it.
-
-                    Just Trying Plain Jane
-                    $RecoveryPlan.Start($RecoveryMode)
-
-                    With the no Synch purposely set
-                    $RecoveryPlan.Start($RecoveryMode, $rpOpt)
-
-
+                    <#
+                    With Synch false purposely set, API 6.5 or Higher hopefully.
+                    $rp.Start($RecoveryMode,$rpOpt)
                     #>
-                    Write-Output "Simulating Start"
-                    "Name $($rpinfo.Name)"
-                    "State $($rpinfo.State)"
-                    "Recovery Mode $RecoveryMode"
-                    "Options $rpOpt"
-                    "Synch Data $SyncData"
-                    $RecoveryMode
-                    $rpOpt
+
+                    $rp.Start($RecoveryMode)
                 }
 
                 else
                 {
-                    $mesg = "Not Sending dismissal for $($rpinfo.Name).  State is $($rpinfo.State).  State should be $ReqState."
+                    $mesg = "Not Starting Test of $($rpinfo.Name).  State is $($rpinfo.State).  State should be $ReqState."
                     Write-Output "`n`t`t$mesg`n"
                 }
             }

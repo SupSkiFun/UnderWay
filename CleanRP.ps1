@@ -36,12 +36,12 @@ Function Start-SRMCleanUp
             {
                 if ($rpinfo.State -eq $ReqState)
                 {
-                    $RecoveryPlan.Start($RecoveryMode)
+                    $rp.Start($RecoveryMode)
                 }
 
                 else
                 {
-                    $mesg = "Not Sending dismissal for $($rpinfo.Name).  State is $($rpinfo.State).  State should be $ReqState."
+                    $mesg = "Not Starting Cleanup for $($rpinfo.Name).  State is $($rpinfo.State).  State should be $ReqState."
                     Write-Output "`n`t`t$mesg`n"
                 }
             }
