@@ -8,27 +8,44 @@ The recovery plan to start
 .PARAMETER RecoveryMode
 The recovery mode to invoke on the plan. May be one of "Test", "Cleanup", "Failover", "Migrate", "Reprotect"
 #>
-Function Start-RecoveryPlan {
-    [cmdletbinding(SupportsShouldProcess=$True, ConfirmImpact="High")]
-    Param(
-        [Parameter (Mandatory=$true, ValueFromPipeline=$true, Position=1)][VMware.VimAutomation.Srm.Views.SrmRecoveryPlan] $RecoveryPlan,
-        [VMware.VimAutomation.Srm.Views.SrmRecoveryPlanRecoveryMode] $RecoveryMode = [VMware.VimAutomation.Srm.Views.SrmRecoveryPlanRecoveryMode]::Test,
-        [bool] $SyncData = $True
+Function Start-RPCleaning
+{
+    [cmdletbinding(SupportsShouldProcess = $True , ConfirmImpact = "High")]
+    Param
+    (
+        [Parameter (Mandatory=$true, ValueFromPipeline=$true, Position=1)][VMware.VimAutomation.Srm.Views.SrmRecoveryPlan[]] $RecoveryPlan
     )
 
-    # Validate with informative error messages
-    $rpinfo = $RecoveryPlan.GetInfo()
+    Begin
+    {
+        [VMware.VimAutomation.Srm.Views.SrmRecoveryPlanRecoveryMode] $RecoveryMode = [VMware.VimAutomation.Srm.Views.SrmRecoveryPlanRecoveryMode]::CleanUpTest
+    }
 
-    # Create recovery options
-    $rpOpt = New-Object VMware.VimAutomation.Srm.Views.SrmRecoveryOptions
-    $rpOpt.SyncData = $SyncData
+    Process 
+    {
+        foreach ($rp in $RecoveryPlan)
+        {
+            $rpinfo = $rp.GetInfo()
+           
+            if ($pscmdlet.ShouldProcess($rpinfo.Name, $RecoveryMode)) 
+            {
+                if ($rpinfo.State -eq "NeedsCleanup")
+                {
+                    $RecoveryPlan.Start($RecoveryMode)
+                    <#
+                    Write-Output "Simulating Start"
+                    "Name $($rpinfo.Name)"
+                    "State $($rpinfo.State)"
+                    "Recovery Mode $RecoveryMode"
+                    $RecoveryMode
+                    #>
+                }
 
-    # Prompt the user to confirm they want to execute the action
-    if ($pscmdlet.ShouldProcess($rpinfo.Name, $RecoveryMode)) {
-        if ($rpinfo.State -eq 'Protecting') {
-            throw "This recovery plan action needs to be initiated from the other SRM instance"
+                else 
+                {
+                    Write-Output "Not Starting Cleanup for $($rpinfo.Name).  State is $($rpinfo.State).  State should be NeedsCleanup."
+                }
+            }
         }
-
-        $RecoveryPlan.Start($RecoveryMode, $rpOpt)
     }
 }
