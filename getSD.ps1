@@ -29,10 +29,10 @@ $MyVar = Get-Snapshot -VM *WEB* | gsd
 Obtain Snapshot Data from one VM, increasing the VIEvent window to 31 seconds by setting both the PreSeconds and PostSeconds parameters to 15:
 Get-SnapShot -VM Guest01 | Get-SnapShotData -PreSeconds 15 -PostSeconds 15
 #>
-function Get-SnapShotDataTest
+function Get-SnapShotData
 {
 	[CmdLetBinding()]
-	[Alias("gsdt")]
+	[Alias("gsd")]
 
 	param
 	(

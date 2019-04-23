@@ -22,7 +22,7 @@ Install two VIBs to two VMHosts, returning an object into a variable:
 $uu = 'https://www.example.com/VMware_bootbank_vsanhealth_6.5.0-2.57.9183449.vib' , 'https://www.example.com/NetAppNasPlugin.v23.vib'
 $MyVar = Get-VMHost -Name ESX03 , ESX04 | Install-VIB -URL $uu
 #>
-function Install-VIBTest
+function Install-VIB
 {
     [CmdletBinding(SupportsShouldProcess = $true , ConfirmImpact = 'high')]
 

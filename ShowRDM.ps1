@@ -29,22 +29,16 @@ $myVar = Get-VM -Name Server50* | Show-RDM
 Query all VMHosts in a cluster using the Show-RDM alias, returning object into a variable:
 $myVar = Get-VMHost -Name * -Location Cluster12 | srdm
 #>
-function Show-RDMTest
+function Show-RDM
 {
     [CmdletBinding()]
-    [Alias("srdmt")]
+    [Alias("srdm")]
     param
     (
-        [Parameter(
-			ParameterSetName = "VM",
-			ValueFromPipeline = $true
-		)]
+        [Parameter(ParameterSetName = "VM" , ValueFromPipeline = $true)]
 		[VMware.VimAutomation.ViCore.Types.V1.Inventory.VirtualMachine[]]$VM,
 
-        [Parameter(
-			ParameterSetName = "VMHost",
-			ValueFromPipeline = $true
-		)]
+        [Parameter(ParameterSetName = "VMHost" , ValueFromPipeline = $true)]
 		[VMware.VimAutomation.ViCore.Types.V1.Inventory.VMHost[]]$VMHost
 	)
 

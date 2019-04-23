@@ -22,7 +22,7 @@ Update two VIBs on two VMHosts, returning an object into a variable:
 $uu = 'https://www.example.com/VMware_bootbank_vsanhealth_6.5.0-2.57.9183449.vib' , 'https://www.example.com/VMware_bootbank_esx-base_6.7.0-0.20.9484548'
 $MyVar = Get-VMHost -Name ESX03 , ESX04 | Update-VIB -URL $uu
 #>
-function Update-VIBTest
+function Update-VIB
 {
     [CmdletBinding(SupportsShouldProcess = $true , ConfirmImpact = 'high')]
 
