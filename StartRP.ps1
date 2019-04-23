@@ -20,7 +20,7 @@ $p | Start-SRMTest -SyncData=$False
 
 Function Start-SRMTest
 {
-    [cmdletbinding(SupportsShouldProcess = $True , ConfirmImpact = "High")]
+    [CmdletBinding(SupportsShouldProcess = $true , ConfirmImpact = 'high')]
     Param
     (
         [Parameter (Mandatory = $true, ValueFromPipeline = $true, Position = 1)]

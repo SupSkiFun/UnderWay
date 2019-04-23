@@ -13,7 +13,7 @@ $p | Send-SRMDismiss
 #>
 Function Send-SRMDismiss
 {
-    [cmdletbinding(SupportsShouldProcess = $True , ConfirmImpact = "High")]
+    [CmdletBinding(SupportsShouldProcess = $true , ConfirmImpact = 'high')]
     Param
     (
         [Parameter (Mandatory = $true , ValueFromPipeline = $true)]

@@ -13,7 +13,7 @@ $p | Start-SRMCleanUp
 #>
 Function Start-SRMCleanUp
 {
-    [cmdletbinding(SupportsShouldProcess = $True , ConfirmImpact = "High")]
+    [CmdletBinding(SupportsShouldProcess = $true , ConfirmImpact = 'high')]
     Param
     (
         [Parameter (Mandatory = $true , ValueFromPipeline = $true )]

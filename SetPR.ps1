@@ -1,57 +1,41 @@
+function Set-PereniallyReserved
+{
+    [CmdletBinding(SupportsShouldProcess = $true , ConfirmImpact = 'high')]
+    [Alias("setpr")]
+    param
+    (
+        [Parameter(Mandatory = $true , ValueFromPipeline = $true)]
+		[VMware.VimAutomation.ViCore.Types.V1.Inventory.VMHost[]] $VMHost,
 
+        [Parameter(Mandatory = $true)]
+        # [ValidateSet('true' , 'false' , IgnoreCase = $false)]
+        [ValidateSet('True' , 'False')]
+        [string] $State
+    )
 
-<#
-$rdms = (get-vm -Location $MyCLUS Get-HardDisk -DiskType "RawPhysical","RawVirtual").ScsiCanonicalName |select -unique
-
-Loop thru all cluster vmhosts?
-
-
-$tt = $x.storage.core.device.list.Invoke()
-
-
-$tt.IsPerenniallyReserved -contains "false"
-then do the loop.  If not just make the object then
-
-object will be VmHost, Device, IsPereniallyReserved
-
-foreach ($rdm in $rdms) {
->>
->> $a = $tt |? device -match $rdm
->> if ($a.IsPerenniallyReserved -match "true")
->> {$a.Device, $a.DefsPath, $a.IsPerenniallyReserved}
->> }
-
-$z = $x.storage.core.device.setconfig.CreateArgs()
-$z
-
-Name                           Value
-----                           -----
-sharedclusterwide              Unset, ([boolean], optional)
-device                         Unset, ([string])
-perenniallyreserved            Unset, ([boolean], optional)
-detached                       Unset, ([boolean], optional)
-
-$x.storage.core.device.setconfig.Invoke($cible)
-
-
-So grab list ($rdms), grab list of devices ($tt) ,
-{quick check first for any not perenially reserved?}
-{also make a flag for whethre the list needs to be grabbed again.  $needRescan = $false
-set to $true if SetPerenially reserved is needed / = False}
-loop list looking for IsPerenniallyReserved -ne true, if -ne true
-make $cible (see below, hopefully don't have to set shared* or detached*), then invoke ,
-then grab list again (idf flag set) and report settings.
-
-
- $cible = @{
- pereniallyreserved = "true"  ;
- device = "looped name"
- }
- $cible
-
-Name                           Value
-----                           -----
-device                         looped name
-pereniallyreserved             true
-
-#>
+    Process
+    {
+        foreach ($vmh in $vmhost)
+        {
+            if ($pscmdlet.ShouldProcess("$vmh all RDMs to $state"))
+            {
+                $x2 = Get-EsxCli -VMHost $vmh -V2
+                $vd = (Get-Datastore -VMHost $vmh |
+                    Where-Object -Property Type -Match VMFS).ExtensionData.Info.Vmfs.Extent.Diskname
+                $dl = $x2.storage.core.device.list.Invoke()
+                # Remove DataStore LUNs, local MicroSd Card, Local Named, Non-Shared from the list.
+                $dl = $dl |
+                    Where-Object{
+                        $_.Device -notin $vd -and $_.Device -notmatch "^mpx" -and $_.DisplayName -notmatch "Local" -and $_.IsSharedClusterwide -eq "true"
+                    }
+                foreach ($d in $dl)
+                {
+                    $z2 = $x2.storage.core.device.setconfig.CreateArgs()
+                    $z2.device = $d.device
+                    $z2.perenniallyreserved = $state.ToLower()
+                    $x2.storage.core.device.setconfig.Invoke($z2)
+                }
+            }
+        }
+    }
+}
