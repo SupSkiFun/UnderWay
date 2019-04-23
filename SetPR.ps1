@@ -25,7 +25,7 @@ function Set-PereniallyReserved
                 $dl = $x2.storage.core.device.list.Invoke()
                 # Remove DataStore LUNs, local MicroSd Card, Local Named, Non-Shared from the list.
                 $dl = $dl |
-                    Where-Object{
+                    Where-Object {
                         $_.Device -notin $vd -and $_.Device -notmatch "^mpx" -and $_.DisplayName -notmatch "Local" -and $_.IsSharedClusterwide -eq "true"
                     }
                 foreach ($d in $dl)
