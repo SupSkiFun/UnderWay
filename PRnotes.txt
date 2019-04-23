@@ -1,121 +1,7 @@
 
 
-<#
+
 $rdms = (get-vm -Location $MyCLUS Get-HardDisk -DiskType "RawPhysical","RawVirtual").ScsiCanonicalName |select -unique
-
-Loop thru all cluster vmhosts?
-
-
-$tt = $x.storage.core.device.list.Invoke()
-
-
-$tt.IsPerenniallyReserved -contains "false"
-then do the loop.  If not just make the object then
-
-object will be VmHost, Device, IsPereniallyReserved
-
-foreach ($rdm in $rdms) {
->>
->> $a = $tt |? device -match $rdm
->> if ($a.IsPerenniallyReserved -match "true")
->> {$a.Device, $a.DefsPath, $a.IsPerenniallyReserved}
->> }
-
-$z = $x.storage.core.device.setconfig.CreateArgs()
-$z
-
-Name                           Value
-----                           -----
-sharedclusterwide              Unset, ([boolean], optional)
-device                         Unset, ([string])
-perenniallyreserved            Unset, ([boolean], optional)
-detached                       Unset, ([boolean], optional)
-
-$x.storage.core.device.setconfig.Invoke($cible)
-
-
-So grab list ($rdms), grab list of devices ($tt) ,
-{quick check first for any not perenially reserved?}
-{also make a flag for whethre the list needs to be grabbed again.  $needRescan = $false
-set to $true if SetPerenially reserved is needed / = False}
-loop list looking for IsPerenniallyReserved -ne true, if -ne true
-make $cible (see below, hopefully don't have to set shared* or detached*), then invoke ,
-then grab list again (idf flag set) and report settings.
-
-
- $cible = @{
- pereniallyreserved = "true"  ;
- device = "looped name"
- }
- $cible
-
-Name                           Value
-----                           -----
-device                         looped name
-pereniallyreserved             true
-
-
-
-
-Raw Returns
-
-$rdms = (get-vm msfc507antv | Get-HardDisk -DiskType "RawPhysical","RawVirtual").ScsiCanonicalName |select -unique
-$x2 = get-esxcli -vmhost $yvrc71n4 -v2
-$rdm=$rdms[0]
-$cible = @{device=$rdm}
-$r1 = $x2.storage.core.device.list.Invoke($cible)
-
-for the get
-/Make a Custom Object - VmHost - Device - IsPerenniallyReserved   $r1.Device $r1.IsPerenniallyReserved
-
-for the set
-
-
-$z2 = $x2.storage.core.device.setconfig.CreateArgs()
-$z2.device = Looped RDM
-$z2.perenniallyreserved="true" - modify this to accept Value from Parameter
-
-
-
-
-$rdmsall = (get-vm -Location $yvrc71n4 | Get-HardDisk -DiskType "RawPhysical","RawVirtual").ScsiCanonicalName |select -unique
-$tt = $x2.storage.core.device.list.Invoke() 
-$rdmsall.count     4
-$tt.Count  10
-
-C:\Users\ja0310\scripts\srm\yvr> foreach ($r in $rdmsall) {
->> $cible = @{ device = $r}
->> $x2.storage.core.device.list.Invoke($cible) |select device, isper*
->> }
->>
-
-Device                               IsPerenniallyReserved
-------                               ---------------------
-naa.600a09803830366a502448672d6e6d70 true
-naa.600a09803830366a502448672d6e6d6f true
-naa.600a09803830366a502448672d6e6d72 true
-naa.600a09803830366a502448672d6e6d71 true
-
-
-C:\Users\ja0310\scripts\srm\yvr> foreach ($r in $rdmsall) {
->> $z2 = $x2.storage.core.device.setconfig.CreateArgs()
->> $z2.device = $r
->> $z2.perenniallyreserved="false"
->> $x2.storage.core.device.setconfig.Invoke($z2)
->> }
-C:\Users\ja0310\scripts\srm\yvr> foreach ($r in $rdmsall) {
->> $cible = @{ device = $r}
->> $x2.storage.core.device.list.Invoke($cible) |select device, isper*
->> }
->>
-
-Device                               IsPerenniallyReserved
-------                               ---------------------
-naa.600a09803830366a502448672d6e6d70 false
-naa.600a09803830366a502448672d6e6d6f false
-naa.600a09803830366a502448672d6e6d72 false
-naa.600a09803830366a502448672d6e6d71 false
-
 
 
 
@@ -124,61 +10,17 @@ naa.600a09803830366a502448672d6e6d71 false
 
 Something within the existing script and the below doesn't work.  It never changes.
 
+Fixed and Random Path Stuff - make two functions within an advanced function?  Or just command line it?
 
-Fixed and Random Path Stuff - make two functions within an advanced function?
+Verify values in production...below doesn't seem to work....?
 
 foreach ($r in $rdms) {
->> $sl = Get-ScsiLun -VmHost $yvrc71n4 -CanonicalName $r
->> $np = Get-ScsiLunPath -ScsiLun $sl
->> $rn = get-Random -Minimum 0 -Maximum $np.count
->> Set-ScsiLun -ScsiLun $sl -MultipathPolicy "Fixed" -PreferredPath $np[$rn].LunPath
->> Set-ScsiLunPath -ScsiLunPath $np[$rn]
->> }
+$sl = Get-ScsiLun -VmHost $yvrc71n4 -CanonicalName $r
+$np = Get-ScsiLunPath -ScsiLun $sl
+$rn = get-Random -Minimum 0 -Maximum $np.count
+Set-ScsiLun -ScsiLun $sl -MultipathPolicy "Fixed" -PreferredPath $np[$rn].LunPath
+Set-ScsiLunPath -ScsiLunPath $np[$rn]
+}
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#>
