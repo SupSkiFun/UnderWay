@@ -1,3 +1,27 @@
+<#
+.SYNOPSIS
+Sets PereniallyReserved value of RDMs from specified VMHost.
+.DESCRIPTION
+Sets PereniallyReserved value of RDMs from specified VMHost to either true or false.  Alias setpr.
+Returns nothing.  Use Get-PereniallyReserved to query values.  
+.PARAMETER VMHost
+VMWare PowerCLI VMHost Object from Get-VMHost
+VMware.VimAutomation.ViCore.Types.V1.Inventory.VMHost
+.PARAMETER State
+Value of PereniallyReserved to set.  Either True or False
+.INPUTS
+VMWare PowerCLI VMHost Object from Get-VMHost:
+VMware.VimAutomation.ViCore.Types.V1.Inventory.VMHost
+.EXAMPLE
+Set all RDMs PereniallyReserved value to False for one VMHost:
+Get-VMHost -Name ESXi17 | Set-PereniallyReserved -State False
+.EXAMPLE
+Set all RDMs PereniallyReserved value to True for all VMHosts in a Cluster using the Set-PereniallyReserved alias:
+Get-VMHost -Name * -Location Cluster12 | setpr -State True
+.LINK
+Get-PereniallyReserved
+#>
+
 function Set-PereniallyReserved
 {
     [CmdletBinding(SupportsShouldProcess = $true , ConfirmImpact = 'high')]

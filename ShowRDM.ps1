@@ -15,7 +15,7 @@ VMWare PowerCLI VM or VMHost Object from Get-VM or Get-VMHost:
 VMware.VimAutomation.ViCore.Types.V1.Inventory.VirtualMachine
 VMware.VimAutomation.ViCore.Types.V1.Inventory.VMHost
 .OUTPUTS
-PSCUSTOMOBJECT SupSkiFun.RDMinfo
+PSCUSTOMOBJECT SupSkiFun.RDM.Info
 .EXAMPLE
 Query one VM for RDMs:
 Get-VM -Name Server01 | Show-RDM
@@ -117,7 +117,7 @@ function Show-RDMTest
 				Vendor = $diskdata.Vendor
 			}
 			$loopobj
-			$loopobj.PSObject.TypeNames.Insert(0,'SupSkiFun.RDMinfo')
+			$loopobj.PSObject.TypeNames.Insert(0,'SupSkiFun.RDM.Info')
 
 		}
 

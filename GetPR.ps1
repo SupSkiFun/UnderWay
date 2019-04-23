@@ -1,3 +1,27 @@
+<#
+.SYNOPSIS
+Retrieve PereniallyReserved value of RDMs from specified VMHost.
+.DESCRIPTION
+Retrieve PereniallyReserved value of RDMs from specified VMHost.
+Returns an object of HostName, Device, and IsPerenniallyReserved.  Alias getpr.
+.PARAMETER VMHost
+VMWare PowerCLI VMHost Object from Get-VMHost
+VMware.VimAutomation.ViCore.Types.V1.Inventory.VMHost
+.INPUTS
+VMWare PowerCLI VMHost Object from Get-VMHost:
+VMware.VimAutomation.ViCore.Types.V1.Inventory.VMHost
+.OUTPUTS
+PSCUSTOMOBJECT SupSkiFun.RDM.Info
+.EXAMPLE
+Query one VMHost for PereniallyReserved value of RDMs:
+Get-VMHost -Name ESXi17 | Get-PereniallyReserved
+.EXAMPLE
+Query all VMHosts in a Cluster using the Get-PereniallyReserved alias, returning object into a variable:
+$myVar = Get-VMHost -Name * -Location Cluster12 | getpr
+.LINK
+Set-PereniallyReserved
+#>
+
 Function Get-PereniallyReserved
 {
     [CmdletBinding()]
@@ -20,7 +44,7 @@ Function Get-PereniallyReserved
 				IsPerenniallyReserved =	$diskdata.IsPerenniallyReserved
 			}
 			$loopobj
-			$loopobj.PSObject.TypeNames.Insert(0,'SupSkiFun.RDMinfo')
+			$loopobj.PSObject.TypeNames.Insert(0,'SupSkiFun.RDM.Info')
         }
 
         foreach ($vmh in $vmhost)
