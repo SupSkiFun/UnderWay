@@ -21,7 +21,7 @@ Class CliObj
             Version = $y.version
         }
         $this.HasData = $true
-        Start-Sleep -Seconds 30
+        Start-Sleep -Seconds 15
         $this.Info = $lo
     }
 }
