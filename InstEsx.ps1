@@ -75,12 +75,13 @@ function Install-ESXi
 
         foreach ($vmh in $VMHost)
         {
-            if($PSCmdlet.ShouldProcess("$vmh installing $imageprofile"))
+            if($PSCmdlet.ShouldProcess("$vmh using $imageprofile"))
             {
                 $xcli = Get-EsxCli -v2 -VMHost $vmh
                 $hash = $xcli.software.profile.install.CreateArgs()
                 $hash.depot = $depot
                 $hash.profile = $imageprofile
+                $hash.oktoremove = $true
                 if ($dryrun)
                 {
                     $hash.dryrun = $true
