@@ -2,7 +2,7 @@
 .SYNOPSIS
 Installs an image profile from a local depot onto a VMHost with ESXi already installed.
 .DESCRIPTION
-Replaces the installed image with the new image profile.  Will result in the loss of installed VIBs that don't match the profile.
+Replaces the installed image with the new image profile.  Will result in the removal of installed VIBs that don't match the profile.
 System Should be in Maintenance Mode.  Use DryRun to test.  Read / Evaluate the returned object.  See Examples.
 Returns an object of HostName, Message, RebootRequired, VIBSInstalled, VIBSRemoved, and VIBSSkipped.
 .PARAMETER VMHost
