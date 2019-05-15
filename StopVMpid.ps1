@@ -51,9 +51,9 @@ function Stop-VMpid
             param($vdata,$resdata)
 
             $lo = [PSCustomObject]@{
-                VM = $v.Name
+                VM = $vdata.Name
                 Result = $resdata
-                VMHost = $v.VMHost.Name
+                VMHost = $vdata.VMHost.Name
             }
             $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.VM.PID.Info')
             $lo

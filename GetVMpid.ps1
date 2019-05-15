@@ -38,14 +38,14 @@ function Get-VMpid
             param($vdata,$resdata)
 
             $lo = [PSCustomObject]@{
-                VM = $v.Name
-                PowerState = $v.PowerState
+                VM = $vdata.Name
+                PowerState = $vdata.PowerState
                 DisplayName = $resdata.DisplayName
                 WorldID = $resdata.WorldID
                 VMXCartelID = $resdata.VMXCartelID
                 ConfigFile = $resdata.ConfigFile
                 UUID = $resdata.UUID
-                VMHost = $v.VMHost.Name
+                VMHost = $vdata.VMHost.Name
             }
             $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.VM.PID.Info')
             $lo
