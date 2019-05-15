@@ -1,23 +1,29 @@
 <#
 .SYNOPSIS
-Short description
+Kills VM Process
 .DESCRIPTION
-Long description
-.PARAMETER
-soft. Gives the VMX process a chance to shut down cleanly (like kill or kill -SIGTERM)
-hard. Stops the VMX process immediately (like kill -9 or kill -SIGKILL)
-force. Stops the VMX process when other options do not work.
-
-.PARAMETER
-Param Info
+Kills VM Process, returning an object of VM, Result, and VMHost.
+.PARAMETER VM
+Output from VMWare PowerCLI Get-VM.  See Examples.
+[VMware.VimAutomation.ViCore.Types.V1.Inventory.VirtualMachine]
+.PARAMETER Type
+Either soft, hard or force.
+soft - Gives the VMX process a chance to shut down cleanly (like kill or kill -SIGTERM)
+hard - Stops the VMX process immediately (like kill -9 or kill -SIGKILL)
+force - Stops the VMX process when other options do not work.  Last Resort.
 .EXAMPLE
-Example of how to use this cmdlet
+Perform a soft kill of one VM, returning the object into a variable:
+$myVar = Get-VM -Name SYS01 | Stop-VMpid -Type soft
 .EXAMPLE
-Another example of how to use this cmdlet
+Perform a hard kill of two VMs, returning the object into a variable:
+$myVar = Get-VM -Name SYS02 , SYS03 | Stop-VMpid -Type hard
 .INPUTS
-Inputs to this cmdlet (if any)
+VMWare PowerCLI VM from Get-VM:
+[VMware.VimAutomation.ViCore.Types.V1.Inventory.VirtualMachine]
 .OUTPUTS
-Output from this cmdlet (if any)
+[pscustomobject] SupSkiFun.VM.PID.Info
+.LINK
+Get-VMpid
 #>
 function Stop-VMpid
 {
@@ -29,14 +35,15 @@ function Stop-VMpid
         [VMware.VimAutomation.ViCore.Types.V1.Inventory.VirtualMachine[]]$VM,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet("soft", "hard", "force")]$Type
+        [ValidateSet("soft", "hard", "force")]
+        [string]$Type
     )
 
     Begin
     {
 
     }
-    
+
     Process
     {
         Function MakeObj
@@ -45,10 +52,10 @@ function Stop-VMpid
 
             $lo = [PSCustomObject]@{
                 VM = $v.Name
-                HostName = $v.VMHost.Name
                 Result = $resdata
+                VMHost = $v.VMHost.Name
             }
-            $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.VIB.Info')
+            $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.VM.PID.Info')
             $lo
         }
 
@@ -59,7 +66,7 @@ function Stop-VMpid
                 if ($v.PowerState -eq "PoweredOn")
                 {
                     $x2 = Get-EsxCli -V2 -VMHost $v.vmhost.Name
-                    $r1 = $x2.vm.process.list.Invoke() | 
+                    $r1 = $x2.vm.process.list.Invoke() |
                         Where-Object -Property DisplayName -eq $v.Name
                     $z2 = $x2.vm.process.kill.CreateArgs()
                     $z2.type = $Type
@@ -67,7 +74,7 @@ function Stop-VMpid
                     $r2 = $x2.vm.process.kill.Invoke($z2)
                     MakeObj -vdata $v -resdata $r2
                 }
-                
+
                 else
                 {
                     $np = "Not Attempted; VM Power state is $($v.PowerState)"
