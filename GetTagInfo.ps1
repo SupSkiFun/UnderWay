@@ -15,13 +15,13 @@ Retrieve tag information of one VM, returning the object into a variable:
 $myVar = Get-VM -Name SYS01 | Get-TagInfo
 .EXAMPLE
 Retrieve tag information of two VMs, returning the object into a variable:
-$myVar = Get-VM -Name SYS02 , SYS03 | Get-TagInfo -Type
+$myVar = Get-VM -Name SYS02 , SYS03 | Get-TagInfo
 .EXAMPLE
 Retrieve tag information of one VMHost, returning the object into a variable:
 $myVar = Get-VMHost -Name ESX01 | Get-TagInfo
 .EXAMPLE
 Retrieve tag information of two VMHosts, returning the object into a variable:
-$myVar = Get-VMHost -Name ESX02 , ESX03 | Get-TagInfo -Type
+$myVar = Get-VMHost -Name ESX02 , ESX03 | Get-TagInfo
 .INPUTS
 VMWare PowerCLI VM or VMHost Object from Get-VM or Get-VMHost:
 VMware.VimAutomation.ViCore.Types.V1.Inventory.VirtualMachine

@@ -12,7 +12,7 @@ Retrieve process information of one VM, returning the object into a variable:
 $myVar = Get-VM -Name SYS01 | Get-VMpid
 .EXAMPLE
 Retrieve process information of two VMs, returning the object into a variable:
-$myVar = Get-VM -Name SYS02 , SYS03 | Get-VMpid -Type
+$myVar = Get-VM -Name SYS02 , SYS03 | Get-VMpid
 .INPUTS
 VMWare PowerCLI VM from Get-VM:
 [VMware.VimAutomation.ViCore.Types.V1.Inventory.VirtualMachine]
