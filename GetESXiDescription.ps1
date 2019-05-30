@@ -46,7 +46,7 @@ function Get-ESXiDescription
 
         foreach ($vmh in $VMHost)
         {
-                $xcli = Get-EsxCli -v2 -VMHost $vmh
+                $xcli = Get-EsxCli -V2 -VMHost $vmh
                 $resp = $xcli.software.profile.get.Invoke()
                 MakeObj -vhdata $vmh.Name -resdata $resp
         }
