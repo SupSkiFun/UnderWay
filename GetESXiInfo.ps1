@@ -1,9 +1,9 @@
 <#
 .SYNOPSIS
-Retrieves the description of an ESXi image installed on a VMHost.
+Retrieves install information from a running ESXi image on a VMHost.
 .DESCRIPTION
-Retrieves the description of an ESXi image installed on a VMHost.
-Returns an object of HostName, Profile, and Description.
+Retrieves install information from a running ESXi image on a VMHost.
+Returns an object of HostName, Profile, Created, Vendor, Description, and Vibs.
 .PARAMETER VMHost
 Output from VMWare PowerCLI Get-VMHost.  See Examples.
 [VMware.VimAutomation.ViCore.Types.V1.Inventory.VMHost]
@@ -13,13 +13,13 @@ VMWare PowerCLI VMHost from Get-VMHost:
 .OUTPUTS
 [PSCUSTOMOBJECT] SupSkiFun.ESXi.Info
 .EXAMPLE
-Retrieve an image description from one VMHost, returning an object into a variable:
-$MyVar = Get-VMHost -Name ESX01 | Get-ESXiDescription
+Retrieve information from one VMHost, returning an object into a variable:
+$MyVar = Get-VMHost -Name ESX01 | Get-ESXiInfo
 .EXAMPLE
-Retrieve an image description from two VMHosts, returning an object into a variable:
-$MyVar = Get-VMHost -Name ESX02 , ESX03 | Get-ESXiDescription
+Retrieve information from two VMHosts, returning an object into a variable:
+$MyVar = Get-VMHost -Name ESX02 , ESX03 | Get-ESXiInfo
 #>
-function Get-ESXiDescription
+function Get-ESXiInfo
 {
     [CmdletBinding()]
 
@@ -37,8 +37,11 @@ function Get-ESXiDescription
 
             $lo = [PSCustomObject]@{
                 HostName = $vhdata
-                Profile = $resdata.Profile
+                Profile = $resdata.Name.Replace("(Updated)","").Trim()
+                Created = $resdata.CreationTime
+                Vendor = $resdata.Vendor
                 Description = $resdata.Description
+                Vibs = $resdata.Vibs
             }
             $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.ESXi.Info')
             $lo
