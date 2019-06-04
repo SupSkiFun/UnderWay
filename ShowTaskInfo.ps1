@@ -18,7 +18,7 @@ Retrieve information from all running tasks, returning an object into a variable
 $MyVar = Get-Task -Status Running | Show-TaskInfo
 .EXAMPLE
 Retrieve information from all recent tasks, returning an object into a variable:
-$MyVar = Get-Task -Id * | Show-TaskInfo
+$MyVar = Get-Task | Show-TaskInfo
 #>
 function Show-TaskInfo
 {

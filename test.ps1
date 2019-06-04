@@ -20,7 +20,7 @@ Function Test-Param
         "Value of $wwwwwww in process block"
         $wwwwwww = $null
         "Second Value of $wwwwwww in process block"
-        
+
     }
     End
     {
