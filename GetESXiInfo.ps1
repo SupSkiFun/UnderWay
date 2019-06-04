@@ -3,7 +3,7 @@
 Retrieves install information from a running ESXi image on a VMHost.
 .DESCRIPTION
 Retrieves install information from a running ESXi image on a VMHost.
-Returns an object of HostName, Profile, Created, Vendor, Description, and Vibs.
+Returns an object of HostName, Profile, Created, Vendor, Description, and VIBs.
 .PARAMETER VMHost
 Output from VMWare PowerCLI Get-VMHost.  See Examples.
 [VMware.VimAutomation.ViCore.Types.V1.Inventory.VMHost]
@@ -41,7 +41,7 @@ function Get-ESXiInfo
                 Created = $resdata.CreationTime
                 Vendor = $resdata.Vendor
                 Description = $resdata.Description
-                Vibs = $resdata.Vibs
+                VIBs = $resdata.Vibs
             }
             $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.ESXi.Info')
             $lo
