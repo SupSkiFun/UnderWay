@@ -2,9 +2,8 @@
 .SYNOPSIS
 Retrieves detailed information from submitted tasks.
 .DESCRIPTION
-Retrieves detailed information from submitted tasks.
-Returns an object of Name, Description, ID, State, IsCancelable,
-PercentComplete, Start, Finish, UserName, EntityName, and EntityID.
+Retrieves detailed information from submitted tasks.  Returns an object of Name, Description, 
+ID, State, IsCancelable, PercentComplete, Start, Finish, UserName, EntityName, and EntityID.
 .PARAMETER Task
 Output from VMWare PowerCLI Get-Task.  See Examples.
 [VMware.VimAutomation.ViCore.Types.V1.Task]
