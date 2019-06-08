@@ -10,8 +10,8 @@ function Open-Console
 
     Begin
     {
-        $mod = 'VMware.VimAutomation.Core'
-        $modb = (Get-Module -Name $mod -ListAvailable)[0].ModuleBase
+        $modn = 'VMware.VimAutomation.Core'
+        $modb = (Get-Module -Name $modn -ListAvailable)[0].ModuleBase
         $vexe = "$($modb)\net45\VMware Remote Console\vmrc.exe"
     }
 
@@ -25,5 +25,3 @@ function Open-Console
         }
     }
 }
-
-#https://communities.vmware.com/message/2812543#2812543
