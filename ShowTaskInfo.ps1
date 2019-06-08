@@ -17,7 +17,7 @@ Retrieve information from all running tasks, returning an object into a variable
 $MyVar = Get-Task -Status Running | Show-TaskInfo
 .EXAMPLE
 Retrieve information from all relocation tasks, returning an object into a variable:
-$MyVar = Get-Task | ? Name -match reloc | Show-TaskInfo
+$MyVar = Get-Task | Where-Object -Property Name -Match reloc | Show-TaskInfo
 .EXAMPLE
 Retrieve information from all recent tasks, returning an object into a variable:
 $MyVar = Get-Task | Show-TaskInfo
