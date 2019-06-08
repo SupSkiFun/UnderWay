@@ -2,7 +2,7 @@
 .SYNOPSIS
 Retrieves detailed information from submitted tasks.
 .DESCRIPTION
-Retrieves detailed information from submitted tasks.  Returns an object of Name, Description, 
+Retrieves detailed information from submitted tasks.  Returns an object of Name, Description,
 ID, State, IsCancelable, PercentComplete, Start, Finish, UserName, EntityName, and EntityID.
 .PARAMETER Task
 Output from VMWare PowerCLI Get-Task.  See Examples.
@@ -15,6 +15,9 @@ VMWare PowerCLI Task from Get-Task:
 .EXAMPLE
 Retrieve information from all running tasks, returning an object into a variable:
 $MyVar = Get-Task -Status Running | Show-TaskInfo
+.EXAMPLE
+Retrieve information from all relocation tasks, returning an object into a variable:
+$MyVar = Get-Task | ? Name -match reloc | Show-TaskInfo
 .EXAMPLE
 Retrieve information from all recent tasks, returning an object into a variable:
 $MyVar = Get-Task | Show-TaskInfo
