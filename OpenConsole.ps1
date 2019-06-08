@@ -10,9 +10,9 @@ function Open-Console
 
     Begin
     {
-        $mod1 = 'VMware.VimAutomation.Core'
-        $mod2 = $mod2 = Get-Module -Name $($mod1) -ListAvailable
-        $vexe = "$($mod2.ModuleBase)\net45\VMware Remote Console\vmrc.exe"
+        $mod = 'VMware.VimAutomation.Core'
+        $modb = (Get-Module -Name $mod -ListAvailable)[0].ModuleBase
+        $vexe = "$($modb)\net45\VMware Remote Console\vmrc.exe"
     }
 
     Process
