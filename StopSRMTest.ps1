@@ -1,9 +1,9 @@
 <#
 .SYNOPSIS
-Stops / cancels a SRM Test.
+Stops / cancels an SRM Test.
 .DESCRIPTION
 Stops / cancels an SRM Test for specified SRM Recovery Plans.
-Does not attempt if submitted plan is not in a Prompting state.
+Does not attempt if submitted plan is not in a Running or Prompting state.
 .PARAMETER RecoveryPlan
 SRM Recovery Plan.  VMware.VimAutomation.Srm.Views.SrmRecoveryPlan
 .EXAMPLE
@@ -22,8 +22,7 @@ Function Stop-SRMTest
 
     Begin
     {
-        [VMware.VimAutomation.Srm.Views.SrmRecoveryPlanRecoveryMode] $RecoveryMode = [VMware.VimAutomation.Srm.Views.SrmRecoveryPlanRecoveryMode]::Cancel
-        $ReqState = "Prompting"
+        $ReqState = "Running" , "Prompting"
     }
 
     Process
@@ -32,16 +31,16 @@ Function Stop-SRMTest
         {
             $rpinfo = $rp.GetInfo()
 
-            if ($pscmdlet.ShouldProcess($rpinfo.Name, 'Stopping / Cancelling'))
+            if ($pscmdlet.ShouldProcess($rpinfo.Name, 'Cancel'))
             {
-                if ($rpinfo.State -eq $ReqState)
+                if ($rpinfo.State -in $ReqState)
                 {
-                    $rp.Cancel($RecoveryMode)
+                    $rp.Cancel()
                 }
 
                 else
                 {
-                    $mesg = "Not Stopping $($rpinfo.Name).  State is $($rpinfo.State).  State should be $ReqState."
+                    $mesg = "Not Stopping $($rpinfo.Name).  State is $($rpinfo.State).  State should be $($ReqState  -join " or ")."
                     Write-Output "`n`t`t$mesg`n"
                 }
             }
