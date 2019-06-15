@@ -2,7 +2,7 @@
 .SYNOPSIS
  Connects to the SRM instance of the currently connected VCenter
 .DESCRIPTION
- Connects to the SRM instance of the currently connected VCenter and its paired partner	with the current session 
+ Connects to the SRM instance of the currently connected VCenter and its paired partner	with the current session
  username.  Prompts for a SRM password.  Password is applied locally and remotely.
 .EXAMPLE
  csrm
@@ -23,7 +23,6 @@ Does not attempt if submitted plan is not in a Prompting state.
 .PARAMETER RecoveryPlan
 SRM Recovery Plan.  VMware.VimAutomation.Srm.Views.SrmRecoveryPlan
 .EXAMPLE
-Get-SRMRecoveryPlan is from module Meadowcroft.Srm.  However, any object containing an SRMRecoveryPlan will work.
 $p = Get-SRMRecoveryPlan -Name XYZ
 $p | Send-SRMDismiss
 #>
@@ -72,7 +71,6 @@ Does not attempt if submitted plan is not in a NeedsCleanup state.
 .PARAMETER RecoveryPlan
 SRM Recovery Plan.  VMware.VimAutomation.Srm.Views.SrmRecoveryPlan
 .EXAMPLE
-Get-SRMRecoveryPlan is from module Meadowcroft.Srm.  However, any object containing an SRMRecoveryPlan will work.
 $p = Get-SRMRecoveryPlan -Name XYZ
 $p | Start-SRMCleanUp
 #>
@@ -125,7 +123,6 @@ SRM Recovery Plan.  VMware.VimAutomation.Srm.Views.SrmRecoveryPlan
 .PARAMETER SyncData
 Future:  Defaults to False.  Can be set True to Sync Data.  Believe exposed in SRM 6.5 API
 .EXAMPLE
-Get-SRMRecoveryPlan is from module Meadowcroft.Srm.  However, any object containing an SRMRecoveryPlan will work.
 $p = Get-SRMRecoveryPlan -Name XYZ
 $p | Start-SRMTest
 .EXAMPLE
