@@ -22,7 +22,8 @@ Function Get-SrmRecoveryPlanJoe
 
     Begin
     {
-        $srmED =  $global:DefaultSrmServers.ExtensionData
+        $srmED =  $DefaultSrmServers.ExtensionData
+        #$srmED =  $global:DefaultSrmServers.ExtensionData
         $plans = $srmED.Recovery.ListPlans()
     }
 
