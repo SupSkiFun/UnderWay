@@ -1,0 +1,10 @@
+<#
+$srmED =  $global:DefaultSrmServers.ExtensionData
+$plans = $srmED.Recovery.ListPlans()
+$plans[0].GetInfo().ProtectionGroups.GetInfo()
+$srmED.Protection.ListProtectedVMs()
+$groups = $srmed.Protection.ListProtectionGroups()
+$groups[0].ListProtectedDatastores()
+$groups[0].ListRecoveryPlans()
+$groups[0].     ProtectVms  UnprotectVms    ListProtectedVms
+#>
