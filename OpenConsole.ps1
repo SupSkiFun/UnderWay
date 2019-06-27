@@ -1,4 +1,3 @@
-
 <#
 .SYNOPSIS
 Opens a Console Window on a VM.
