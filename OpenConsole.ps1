@@ -1,5 +1,19 @@
-
-function Open-Console
+<#
+.SYNOPSIS
+Opens a VM Console
+.DESCRIPTION
+Opens a VM Console.  Created when Open-VMConsoleWindow was failing.
+.PARAMETER VM
+Output from VMWare PowerCLI Get-VM.  See Examples.
+[VMware.VimAutomation.ViCore.Types.V1.Inventory.VirtualMachine]
+.EXAMPLE
+Open a console session:
+Get-VM -Name SYS01 | Open-Console
+.INPUTS
+VMWare PowerCLI VM from Get-VM:
+[VMware.VimAutomation.ViCore.Types.V1.Inventory.VirtualMachine]
+#>
+Function Open-Console
 {
     [CmdletBinding()]
     Param
