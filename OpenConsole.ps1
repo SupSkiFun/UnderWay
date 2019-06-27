@@ -38,8 +38,8 @@ Function Open-Console
     {
         foreach ($v in $vm)
         {
-            $mkst = $vm.ExtensionData.AcquireMksTicket()
-            $parm = "vmrc://$($vm.VMHost.Name):902/?mksticket=$($mkst.Ticket)&thumbprint=$($mkst.SslThumbPrint)&path=$($mkst.CfgFile)"
+            $mkst = $v.ExtensionData.AcquireMksTicket()
+            $parm = "vmrc://$($v.VMHost.Name):902/?mksticket=$($mkst.Ticket)&thumbprint=$($mkst.SslThumbPrint)&path=$($mkst.CfgFile)"
             & "$vexe" $parm
         }
     }
