@@ -1,5 +1,24 @@
 
-function Open-Console
+<#
+.SYNOPSIS
+Opens a Console Window on a VM.
+.DESCRIPTION
+Opens a Console Window on a VM.  Was written as an alternative to Open-VMConsoleWindow when
+Open-VMConsoleWindow was not functioning correctly after a Virtual Center upgrade.
+.PARAMETER VM
+Output from VMWare PowerCLI Get-VM.  See Examples.
+[VMware.VimAutomation.ViCore.Types.V1.Inventory.VirtualMachine]
+.INPUTS
+VMWare PowerCLI VM from Get-VM:
+[VMware.VimAutomation.ViCore.Types.V1.Inventory.VirtualMachine]
+.EXAMPLE
+Open a Console Window on a VM.
+Get-VM -Name Server01 | Open-Console
+.EXAMPLE
+Open a Console Window on multiple VMs.
+Get-VM -Name Test* | Open-Console
+#>
+Function Open-Console
 {
     [CmdletBinding()]
     Param
