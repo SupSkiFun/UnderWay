@@ -34,19 +34,21 @@ function Show-VMStat
         [Parameter(Mandatory = $true , ValueFromPipeline = $true)]
         [VMware.VimAutomation.ViCore.Types.V1.Inventory.VirtualMachine[]] $VM,
 
-        [ValidateRange(1,45)]$Days = 30
+        [Parameter()][ValidateRange(1,45)]$Days = 30
     )
 
     Begin
     {
         $dt = Get-Date
+        # $st = those below 3 values
         $s1 = 'cpu.usage.average'
         $s2 = 'mem.usage.average'
+        $s3 = 'net.usage.average'
         $sp = @{
             Start = ($dt).AddDays(-$days)
             Finish = $dt
             MaxSamples = 10000
-            Stat = $s1 , $s2
+            Stat = $s1 , $s2  # , $s3  or just $st 
         }
     }
 
@@ -72,6 +74,8 @@ function Show-VMStat
         foreach ($v in $vm)
         {
             $r1 =  Get-Stat -Entity ($v) @sp
+            # switch $st with automatic looping!
+            #  new function for rounding and summing?  called by the switch?
             $c1 = $r1 |
                 Where-Object -Property MetricID -Match $s1 |
                     Measure-Object -Property value -Average -Maximum -Minimum
