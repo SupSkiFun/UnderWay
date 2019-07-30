@@ -1,8 +1,42 @@
 Class STclass
 {
-    # Roundem should return a hashtable
-    # No Data should return a hashtable
-    # Make Obj returns a PsObject
+    static [hashtable] RoundEm ( [psobject] $rdata )
+    {
+        $ht = @{
+            Average = [Math]::Round($rdata.Average , 2)
+            Minimum = [Math]::Round($rdata.Minimum , 2)
+            Maximum = [Math]::Round($rdata.Maximum , 2)
+        }
+        return $ht
+    }
+
+    static [hashtable] NoData ( [string] $nd )
+    {
+        $ht = @{
+            Average = $nd
+            Minimum = $nd
+            Maximum = $nd
+        }
+        return $ht
+    }
+
+    static [pscustomobject] MakeSTObj( [string] $vdata , [hashtable] $c2, [hashtable] $m2 , [hashtable] $n2 )
+    {
+        $lo = [PSCustomObject]@{
+            VM = $vdata
+            CPUaverage = $c2.Average
+            MEMaverage = $m2.Average
+            NETaverage = $n2.Average
+            CPUminimum = $c2.Minimum
+            MEMminimum = $m2.Minimum
+            NETminimum = $n2.Minimum
+            CPUmaximum = $c2.Maximum
+            MEMmaximum = $m2.Maximum
+            NETmaximum = $n2.Maximum
+        }
+        $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.VM.Stat.Info')
+        return $lo
+    }
 }
 
 <#
@@ -41,7 +75,7 @@ function Show-VMStat
         [Parameter(Mandatory = $true , ValueFromPipeline = $true)]
         [VMware.VimAutomation.ViCore.Types.V1.Inventory.VirtualMachine[]] $VM,
 
-        [Parameter()][ValidateRange(1,45)]$Days = 30
+        [Parameter()][ValidateRange(1,45)] $Days = 30
     )
 
     Begin
@@ -64,69 +98,65 @@ function Show-VMStat
     Process
     {
         <#
-            Test Help, Validate Set
-            Make Class with Methods for Rounding and Object Creation
-            If using rounding use an array to loop thru values?  Avg, min, max
-            Need to test for null before calling rounding / obj creation?
+            Test Help, Validate Set, Overall working, need Try/Catch for Get-Stat?
+            Process switch block is kinda long.....rework into something more concise?
         #>
-
-        Function MakeObj
-        {
-            param($vdata,$cdata,$mdata,$ndata)
-
-            $lo = [PSCustomObject]@{
-                VM = $vdata
-                CPUaverage = [Math]::Round($cdata.Average , 2)
-                MEMaverage = [Math]::Round($mdata.Average , 2)
-                NETaverage = [Math]::Round($ndata.Average , 2)
-                CPUminimum = [Math]::Round($cdata.Minimum , 2)
-                MEMminimum = [Math]::Round($mdata.Minimum , 2)
-                NETminimum = [Math]::Round($ndata.Minimum , 2)
-                CPUmaximum = [Math]::Round($cdata.Maximum , 2)
-                MEMmaximum = [Math]::Round($mdata.Maximum , 2)
-                NETmaximum = [Math]::Round($ndata.Maximum , 2)
-            }
-            $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.VM.Stat.Info')
-            $lo
-        }
 
         foreach ($v in $vm)
         {
+            #  Need a try / catch here?  Seems ok without.
+            #  Why the () around $v below?
             $r1 = Get-Stat -Entity ($v) @sp
             switch ($st)
             {
                 $s1
                 {
                     $c1 = $r1 |
-                    Where-Object -Property MetricID -Match $s1 |
-                        Measure-Object -Property value -Average -Maximum -Minimum
+                        Where-Object -Property MetricID -Match $s1 |
+                            Measure-Object -Property Value -Average -Maximum -Minimum
                     if ($c1)
                     {
-                       $c2 =  "call RoundEm "
+                       $c2 = [STclass]::RoundEm($c1)
                     }
                     else
                     {
-                       $c2 =  "make Hash of No Data"
-                       $nd
+                       $c2 = [STclass]::NoData($nd)
                     }
                 }
 
                 $s2
                 {
                     $m1 = $r1 |
-                    Where-Object -Property MetricID -Match $s2 |
-                        Measure-Object -Property value -Average -Maximum -Minimum
+                        Where-Object -Property MetricID -Match $s2 |
+                            Measure-Object -Property value -Average -Maximum -Minimum
+                    if ($m1)
+                    {
+                        $m2 = [STclass]::RoundEm($m1)
+                    }
+                    else
+                    {
+                        $m2 = [STclass]::NoData($nd)
+                    }
                 }
 
                 $s3
                 {
                     $n1 = $r1 |
-                    Where-Object -Property MetricID -Match $s3 |
-                        Measure-Object -Property value -Average -Maximum -Minimum
+                        Where-Object -Property MetricID -Match $s3 |
+                            Measure-Object -Property value -Average -Maximum -Minimum
+                    if ($n1)
+                    {
+                        $n2 = [STclass]::RoundEm($n1)
+                    }
+                    else
+                    {
+                        $n2 = [STclass]::NoData($nd)
+                    }
                 }
             }
 
-            MakeObj -vdata $v.Name -cdata $c1 -mdata $m1 -ndata $n1
+            $lo = [STclass]::MakeSTObj($v.Name , $c2 , $m2 , $n2)
+            $lo
             $r1 , $c1 , $m1 , $n1 , $c2 , $m2 , $n2 = $null
         }
     }
