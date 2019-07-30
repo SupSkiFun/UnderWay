@@ -4,12 +4,12 @@ Class STclass
     {
         $lo = [PSCustomObject]@{
             VM = $vdata
-            MEMmax = $ohash.MEMmax
-            MEMavg = $ohash.MEMavg
-            NETmax = $ohash.NETmax
             CPUavg = $ohash.CPUavg
+            MEMavg = $ohash.MEMavg
             NETavg = $ohash.NETavg
             CPUmax = $ohash.CPUmax
+            MEMmax = $ohash.MEMmax
+            NETmax = $ohash.NETmax
         }
         $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.VM.Stat.Info')
         return $lo
@@ -75,11 +75,6 @@ function Show-VMStat
 
     Process
     {
-        <#
-            Test Help, Validate Set, Overall working, need Try/Catch for Get-Stat?
-            Process switch block is kinda long.....rework into something more concise?
-        #>
-
         foreach ($v in $vm)
         {
             $ohash.Clear()
@@ -93,18 +88,18 @@ function Show-VMStat
                             Measure-Object -Property Value -Average -Maximum 
                 if ($c1)
                 {
-                    $ohash.Add($($t1+"avg"),[math]::Round($s.Average,2))
-                    $ohash.Add($($t1+"max"),[math]::Round($s.Maximum,2))
+                    $ohash.Add($($t1+"avg"),[math]::Round($c1.Average,2))
+                    $ohash.Add($($t1+"max"),[math]::Round($c1.Maximum,2))
                 }
                 else
                 {
                     $ohash.Add($($t1+"avg"),$nd)
                     $ohash.Add($($t1+"max"),$nd)
                 }
-                $lo = [STclass]::MakeSTObj($v.Name , $ohash)
-                $lo
-                $r1 , $c1 , $t1 = $null
             }
+            $lo = [STclass]::MakeSTObj($v.Name , $ohash)
+            $lo
+            $r1 , $c1 , $t1 = $null
         }
     }
 }
