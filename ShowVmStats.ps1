@@ -1,3 +1,8 @@
+Class STclass
+{
+
+}
+
 <#
 .SYNOPSIS
 Retrieves Memory and CPU statistics
@@ -40,15 +45,16 @@ function Show-VMStat
     Begin
     {
         $dt = Get-Date
-        # $st = those below 3 values
-        $s1 = 'cpu.usage.average'
-        $s2 = 'mem.usage.average'
-        $s3 = 'net.usage.average'
+        $st = @(
+            $s1 = 'cpu.usage.average'
+            $s2 = 'mem.usage.average'
+            $s3 = 'net.usage.average'
+        )
         $sp = @{
             Start = ($dt).AddDays(-$days)
             Finish = $dt
             MaxSamples = 10000
-            Stat = $s1 , $s2  # , $s3  or just $st 
+            Stat = $s1 , $s2  # , $s3  or just $st
         }
     }
 
