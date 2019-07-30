@@ -20,13 +20,13 @@ Class STclass
 .SYNOPSIS
 Retrieves Memory, CPU, and NET statistics
 .DESCRIPTION
-Retrieves Memory, CPU, and NET statistics.  Memory and CPU are in PerCentAge; NET is in KBps.  Returns an object of
-VM, CPUaverage, MEMaverage, NETaverage, CPUmaximum, MEMmaximum, and NETmaximum.
+Retrieves Memory, CPU, and NET usage statistics.  Memory and CPU are in PerCentAge; NET is in KBps.
+Returns an object of VM, CPUaverage, MEMaverage, NETaverage, CPUmaximum, MEMmaximum, and NETmaximum.
 .PARAMETER VM
 Output from VMWare PowerCLI Get-VM. See Examples.
 [VMware.VimAutomation.ViCore.Types.V1.Inventory.VirtualMachine]
 .PARAMETER Days
-Number of Past Days to check.  Defaults to 30.  1 - 45 accepted.
+Number of Past Days to check.  Defaults to 30.  1 to  45 accepted.
 .EXAMPLE
 Retrieve statistical information of one VM, returning the object into a variable:
 $myVar = Get-VM -Name SYS01 | Show-VMStat
@@ -61,9 +61,9 @@ function Show-VMStat
         $nd = "No Data"
         $ohash = @{}
         $st = @(
-            'cpu.usage.average' 
-            'mem.usage.average' 
-            'net.usage.average' 
+            'cpu.usage.average'
+            'mem.usage.average'
+            'net.usage.average'
         )
         $sp = @{
             Start = ($dt).AddDays(-$days)
@@ -85,7 +85,7 @@ function Show-VMStat
                 $t1 = $s.Split(".")[0].ToUpper()
                 $c1 = $r1 |
                     Where-Object -Property MetricID -Match $s |
-                            Measure-Object -Property Value -Average -Maximum 
+                            Measure-Object -Property Value -Average -Maximum
                 if ($c1)
                 {
                     $ohash.Add($($t1+"avg"),[math]::Round($c1.Average,2))
