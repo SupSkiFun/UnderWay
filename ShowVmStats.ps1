@@ -75,7 +75,7 @@ function Show-VMStat
         [Parameter(Mandatory = $true , ValueFromPipeline = $true)]
         [VMware.VimAutomation.ViCore.Types.V1.Inventory.VirtualMachine[]] $VM,
 
-        [Parameter()][ValidateRange(1,45)] $Days = 30
+        [Parameter()][ValidateRange(1,45)] [int32] $Days = 30
     )
 
     Begin
