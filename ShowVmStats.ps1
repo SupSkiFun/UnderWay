@@ -26,7 +26,7 @@ Returns an object of VM, CPUaverage, MEMaverage, NETaverage, CPUmaximum, MEMmaxi
 Output from VMWare PowerCLI Get-VM. See Examples.
 [VMware.VimAutomation.ViCore.Types.V1.Inventory.VirtualMachine]
 .PARAMETER Days
-Number of Past Days to check.  Defaults to 30.  1 to  45 accepted.
+Number of Past Days to check.  Defaults to 30.  1 to 45 accepted.
 .EXAMPLE
 Retrieve statistical information of one VM, returning the object into a variable:
 $myVar = Get-VM -Name SYS01 | Show-VMStat
