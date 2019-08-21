@@ -1,12 +1,3 @@
-<#
-To Do.
-1. Better Object Name for Maximum and Used?  Maybe return in KB, rounded?
-SizeKB, UsedKB?  Verify Maximum, PercentFree and Used values!!  If Object Names
-Change, also change Help.
-2. Test Pattern parameter.
-3. Change name to Get-VMHostHyperVisorFS ???  Examples and function....
-#>
-
 Class VFSclass
 {
     static [pscustomobject] MakeVFSObj ( [string] $Name , [PSObject] $Info )
@@ -28,13 +19,13 @@ Class VFSclass
 Retrieves file systems of the VMHost HyperVisor.
 .DESCRIPTION
 By default, retrieves file systems of the VMHost HyperVisor.  If an optional pattern is specified
-only file systems matching the pattern are retrieved.  Returns an object of:
+only file systems matching the pattern are retrieved; akin to -match.  Returns an object of:
 HostName, MountPoint, PercentFree, Maximum, Used, and RamDiskName.
 .PARAMETER VMHost
 Output from VMWare PowerCLI Get-VMHost. See Examples.
 [VMware.VimAutomation.ViCore.Types.V1.Inventory.VMHost]
 .PARAMETER Pattern
-Optional.  If specified only returns mount points matching the pattern.  See Examples.
+Optional.  If specified only returns mount points matching the pattern; akin to -match.  See Examples.
 .INPUTS
 VMWare PowerCLI VMHost from Get-VMHost:
 [VMware.VimAutomation.ViCore.Types.V1.Inventory.VMHost]
@@ -45,7 +36,7 @@ Returns an object of all HyperVisor File Systems from one VMHost:
 Get-VMHost -Name ESX01 | Get-ESXiHyperVisorFS
 .EXAMPLE
 Returns an object of HyperVisor File Systems with a mount point matching "tmp" from two VMHosts:
-Get-VMHost -Name ESX02, ESX03 | Get-ESXiHyperVisorFS -Pattern tmp
+Get-VMHost -Name ESX02 , ESX03 | Get-ESXiHyperVisorFS -Pattern tmp
 .EXAMPLE
 Returns an object of all HyperVisor File Systems from all VMHosts in a cluster, into a variable:
 $myVar = Get-VMHost -Location CLUS01 | Get-ESXiHyperVisorFS
