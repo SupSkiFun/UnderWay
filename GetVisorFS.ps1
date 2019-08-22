@@ -57,7 +57,6 @@ Function Get-ESXiHyperVisorFS
         foreach ($vmh in $vmhost)
         {
             $x2 = Get-EsxCli -V2 -VMHost $vmh
-
             if (-not($pattern))
             {
                 $z2 = $x2.system.visorfs.ramdisk.list.Invoke()
@@ -66,7 +65,6 @@ Function Get-ESXiHyperVisorFS
             {
                 $z2 = $x2.system.visorfs.ramdisk.list.Invoke().where({$_.MountPoint -match $Pattern})
             }
-
             foreach ($z in $z2)
             {
                 $lo = [VFSclass]::MakeVFSObj($vmh.Name , $z)
