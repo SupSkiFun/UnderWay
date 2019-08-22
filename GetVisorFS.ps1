@@ -19,13 +19,13 @@ Class VFSclass
 Retrieves file systems of the VMHost HyperVisor.
 .DESCRIPTION
 By default, retrieves file systems of the VMHost HyperVisor.  If an optional pattern is specified
-only file systems matching the pattern are retrieved; akin to -match.  Returns an object of:
-HostName, MountPoint, PercentFree, Maximum, Used, and RamDiskName.
+only file systems matching the pattern are retrieved; akin to -match.
+Returns an object of HostName, MountPoint, PercentFree, Maximum, Used, and RamDiskName.
 .PARAMETER VMHost
-Output from VMWare PowerCLI Get-VMHost. See Examples.
+Mandatory. Output from VMWare PowerCLI Get-VMHost. See Examples.
 [VMware.VimAutomation.ViCore.Types.V1.Inventory.VMHost]
 .PARAMETER Pattern
-Optional.  If specified only returns mount points matching the pattern; akin to -match.  See Examples.
+Optional. If specified only returns mount points matching the pattern; akin to -match.  See Examples.
 .INPUTS
 VMWare PowerCLI VMHost from Get-VMHost:
 [VMware.VimAutomation.ViCore.Types.V1.Inventory.VMHost]
@@ -40,7 +40,6 @@ Get-VMHost -Name ESX02 , ESX03 | Get-ESXiHyperVisorFS -Pattern tmp
 .EXAMPLE
 Returns an object of all HyperVisor File Systems from all VMHosts in a cluster, into a variable:
 $myVar = Get-VMHost -Location CLUS01 | Get-ESXiHyperVisorFS
-.EXAMPLE
 #>
 Function Get-ESXiHyperVisorFS
 {
