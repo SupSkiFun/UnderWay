@@ -18,6 +18,20 @@ class vClasss
         }
         return $shash
     }
+
+    static [pscustomobject] MakeSDRObj ( [Array] $VName , [PSObject] $Rule )
+    {
+        $obj = [pscustomobject]@{
+            Name = $rule.Name
+            Cluster = $rule.cluster.ToSTring()
+            VMId = $rule.VMIds
+            VM = $vname
+            Type = $rule.Type.ToString()
+            Enabled = $rule.Enabled.ToString()
+        }
+        $obj.PSObject.TypeNames.Insert(0,'SupSkiFun.DrsRuleInfo')
+        return $obj
+    }
 }
 
 <#
@@ -43,11 +57,8 @@ function Show-DrsRuleNew
     [Alias("sdr")]
     param
     (
-        [Parameter(ValueFromPipelineByPropertyName = $true,
-            ValueFromPipeline = $true,
-            Position=0,
-            Mandatory=$true
-        )]
+        [Parameter(ValueFromPipelineByPropertyName = $true, 
+            ValueFromPipeline = $true, Mandatory=$true)]
         [Alias("Name")]
         $Cluster
     )
@@ -66,16 +77,8 @@ function Show-DrsRuleNew
             {
                 $vmhash.$vn
             }
-            $loopobj = [pscustomobject]@{
-                Name = $rule.Name
-                Cluster = $rule.cluster.ToSTring()
-                VMId = $rule.VMIds
-                VM = $vname
-                Type = $rule.Type.ToString()
-                Enabled = $rule.Enabled.ToString()
-            }
-            $loopobj.PSObject.TypeNames.Insert(0,'SupSkiFun.DrsRuleInfo')
-            $loopobj
+            $lo = [vClasss]::MakeSDRObj($vname , $rule)
+            $lo
             $vname = $null
         }
     }
