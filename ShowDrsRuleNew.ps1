@@ -20,22 +20,22 @@ class vClasss
     }
 }
 
-<# 
-.SYNOPSIS 
-Outputs DRS rules for specified clusters 
-.DESCRIPTION 
-Outputs an object of DRS Rule Name, cluster, VMIds, VM Name, Type and Enabled for specified clusters. 
-Alias = sdr 
-.PARAMETER Cluster 
-Mandatory. Cluster(s) to query for DRS rules. Can manually enter or pipe output from VmWare Get-Cluster. 
-.OUTPUTS 
-PSCUSTOMOBJECT SupSkiFun.PortGroupInfo 
-.EXAMPLE 
-Retrieve DRS rule for one cluster, placing the object into a variable: 
-$MyVar = Show-DrsRule -Cluster cluster09 
-.EXAMPLE 
-Retrieve DRS rules for all clusters, using the Show-DrsRule alias, placing the object into a variable: 
-$MyVar = Get-Cluster -Name * | sdr 
+<#
+.SYNOPSIS
+Outputs DRS rules for specified clusters
+.DESCRIPTION
+Outputs an object of DRS Rule Name, cluster, VMIds, VM Name, Type and Enabled for specified clusters.
+Alias = sdr
+.PARAMETER Cluster
+Mandatory. Cluster(s) to query for DRS rules. Can manually enter or pipe output from VmWare Get-Cluster.
+.OUTPUTS
+PSCUSTOMOBJECT SupSkiFun.PortGroupInfo
+.EXAMPLE
+Retrieve DRS rule for one cluster, placing the object into a variable:
+$MyVar = Show-DrsRule -Cluster cluster09
+.EXAMPLE
+Retrieve DRS rules for all clusters, using the Show-DrsRule alias, placing the object into a variable:
+$MyVar = Get-Cluster -Name * | sdr
 #>
 function Show-DrsRuleNew
 {
@@ -64,7 +64,7 @@ function Show-DrsRuleNew
         {
             $vname = foreach ($vn in $rule.vmids)
             {
-                $vmhash.$vn.ToString()
+                $vmhash.$vn
             }
             $loopobj = [pscustomobject]@{
                 Name = $rule.Name
