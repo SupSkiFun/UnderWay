@@ -24,10 +24,10 @@ Returns an object of Role, Principal, Entity, EntityID, Propogate, IsGroup. and 
 .OUTPUTS
 PSCUSTOMOBJECT SupSkiFun.Permissions.Info
 .EXAMPLE
-Returns the object into a variable:
+Return the object into a variable:
 $MyVar = Show-VIPermission
 .EXAMPLE
-Returns JSON into a variable:
+Return JSON into a variable:
 $MyVar = Show-VIPermission | ConvertTo-Json -Depth 3
 .LINK
 Get-VIPermission
