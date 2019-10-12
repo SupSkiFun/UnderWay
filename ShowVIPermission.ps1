@@ -17,9 +17,9 @@ class vClasss
 }
 <#
 .SYNOPSIS
-Outputs all Permissions and their affiliated Roles and Privileges.
+Outputs all Permissions with their affiliated Role and Privileges.
 .DESCRIPTION
-Amalgamates all Permissions and their affiliated Roles and Privileges.  Useful for archive and/or (re)creation.
+Amalgamates all Permissions with their affiliated Role and Privileges.  Optimal for archive and/or (re)creation.
 Returns an object of Role, Principal, Entity, EntityID, Propogate, IsGroup. and Privilege.
 .OUTPUTS
 PSCUSTOMOBJECT SupSkiFun.Permissions.Info
