@@ -19,8 +19,13 @@ class vClasss
 .SYNOPSIS
 Outputs all Permissions with their affiliated Role and Privileges.
 .DESCRIPTION
-Amalgamates all Permissions with their affiliated Role and Privileges.  Optimal for archive and/or (re)creation.
+Amalgamates all Permissions with their affiliated Role and Privileges.
 Returns an object of Role, Principal, Entity, EntityID, Propogate, IsGroup. and Privilege.
+.NOTES
+Optimal for archiving and for (re)creating roles and permissions.  Convertable to JSON (see example).
+A privilege defines right(s) to perform actions and read properties.
+A role is a set of privileges.
+A permission gives a Principal (user or group) a role for a specific entity.
 .OUTPUTS
 PSCUSTOMOBJECT SupSkiFun.Permissions.Info
 .EXAMPLE
@@ -33,6 +38,7 @@ $MyVar = Show-VIPermission | ConvertTo-Json -Depth 3
 Get-VIPermission
 Get-VIPrivilege
 Get-VIRole
+New-VIPermission
 #>
 Function Show-VIPermission
 {
