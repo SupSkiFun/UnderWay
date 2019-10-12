@@ -43,7 +43,7 @@ New-VIPermission
 Function Show-VIPermission
 {
     [CmdletBinding()]
-    param()
+    Param()
 
     Begin
     {
