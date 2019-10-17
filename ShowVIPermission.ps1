@@ -4,12 +4,13 @@ class vClasss
     {
         $obj = [PSCustomObject]@{
             Role = $perm.Role
+            RoleIsSystem = $priv[0]
             Principal = $perm.Principal
             Entity = $perm.Entity.ToString()
             EntityID = $perm.EntityId
             Propagate = $perm.Propagate
-            IsGroup = $perm.IsGroup
-            Privilege = $priv
+            PrincipalIsGroup = $perm.IsGroup
+            Privilege = $priv[1]
         }
         $obj.PSObject.TypeNames.Insert(0,'SupSkiFun.Permissions.Info')
         return $obj
@@ -20,7 +21,7 @@ class vClasss
 Outputs all Permissions with their affiliated Role and Privileges.
 .DESCRIPTION
 Amalgamates all Permissions with their affiliated Role and Privileges.
-Returns an object of Role, Principal, Entity, EntityID, Propogate, IsGroup. and Privilege.
+Returns an object of Role, RoleIsSystem, Principal, Entity, EntityID, Propogate, PrincipalIsGroup, and Privilege.
 .NOTES
 Optimal for archiving and for (re)creating roles and permissions.  Convertable to JSON (see example).
 A privilege defines right(s) to perform actions and read properties.
@@ -60,7 +61,8 @@ Function Show-VIPermission
             {
                 ($p = Get-VIPrivilege -ErrorAction SilentlyContinue -Role $r).Name |
                     Out-Null
-                $hh.add($r.Name,$p.Name)
+                # hash with array value.  [0] is true/false. [1] is array of privileges
+                $hh.add($r.Name,@($r.IsSystem,$p.Name))
             }
         }
 
