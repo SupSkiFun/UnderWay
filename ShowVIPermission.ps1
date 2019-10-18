@@ -61,7 +61,7 @@ Function Show-VIPermission
             {
                 ($p = Get-VIPrivilege -ErrorAction SilentlyContinue -Role $r).Name |
                     Out-Null
-                # hash with array value.  [0] is true/false. [1] is array of privileges
+                # hash with array value.  [0] is RoleIsSystem true/false. [1] is array of privileges
                 $hh.add($r.Name,@($r.IsSystem,$p.Name))
             }
         }
