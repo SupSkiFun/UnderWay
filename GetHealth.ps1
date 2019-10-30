@@ -10,7 +10,7 @@ Orange indicates that non-security updates are available.
 Green indicates that there are no updates available.
 Gray indicates that there was an error retreiving information on software updates.
 .OUTPUTS
-pscustombobject SupSkiFun.VAMI.Health.Status
+pscustomobject SupSkiFun.VAMI.Health.Status
 .EXAMPLE
 Returns an object of VAMI Health into a variable:
 $MyObj = Get-VAMIHealth
