@@ -17,7 +17,8 @@ VMWare PowerCLI VMHost from Get-VMHost:
 .EXAMPLE
 Enables the WBEM service on two VMHosts:
 Get-VMHost -Name ESX01 , ESX02 | Set-WBEMState -Enabled
-.EXAMPLE Disables the WBEM service on two VMHosts:
+.EXAMPLE
+Disables the WBEM service on two VMHosts:
 Get-VMHost -Name ESX01 , ESX02 | Set-WBEMState -Disabled
 .LINK
 Get-WBEMState
