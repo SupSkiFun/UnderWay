@@ -43,7 +43,7 @@ Retrieve information for the past two days, returning object into a variable:
 $MyVar = Get-HARestartInfo -Days 2
 .EXAMPLE
 Retrieve information searching through the first 200 entries, returning object into a variable:
-$MyVar = Get-HARestartInfo -Entries 2
+$MyVar = Get-HARestartInfo -Entries 200
 #>
 Function Get-HARestartInfo
 {
