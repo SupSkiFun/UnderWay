@@ -81,9 +81,6 @@ Function Get-HARestartInfo
 }
 
 <#
-
 Example output of $z.FullFormattedMessage above looks akin to:
-
 vSphere HA restarted virtual machine MyFine on host ESX-Server-O1.example.com in cluster PROD-17
-
 #>
