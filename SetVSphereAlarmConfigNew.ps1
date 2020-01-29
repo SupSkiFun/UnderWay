@@ -80,7 +80,15 @@ function Set-VSphereAlarmConfigNew  # Remove trailing New
         Function SetState
         {
             param($Item , $State)
-            $alarmgr.EnableAlarmActions($object.Extensiondata.MoRef,$state)
+            if ($state -eq "Enabled")
+            {
+                $state = $true
+            }
+            elseif ($state -eq "Disabled")
+            {
+                $state = $false
+            }
+            $alarmgr.EnableAlarmActions($item , $state)
         }
 
         If ($vm)
@@ -89,18 +97,18 @@ function Set-VSphereAlarmConfigNew  # Remove trailing New
             {
                 if($PSCmdlet.ShouldProcess("$v to $($state)"))
                 {
-                    SetState -Item $v.Extensiondata.MoRef -State $State  
+                    SetState -Item $v.Extensiondata.MoRef -State $State
                 }
             }
         }
-        
+
         If ($vmhost)
         {
             foreach ($vmh in $vmhost)
             {
                 if($PSCmdlet.ShouldProcess("$vmh to $($state)"))
                 {
-                    SetState -Item $vmh.Extensiondata.MoRef -State $State  
+                    SetState -Item $vmh.Extensiondata.MoRef -State $State
                 }
             }
         }
@@ -111,7 +119,7 @@ function Set-VSphereAlarmConfigNew  # Remove trailing New
             {
                 if($PSCmdlet.ShouldProcess("$clu to $($state)"))
                 {
-                    SetState -Item $clu.Extensiondata.MoRef -State $State  
+                    SetState -Item $clu.Extensiondata.MoRef -State $State
                 }
 
             }
