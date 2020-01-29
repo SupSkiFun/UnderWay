@@ -1,23 +1,13 @@
 Class NewVClass
 {
-    static [pscustomobject] ParseInfo( [psobject] $line )
+    static [pscustomobject] MakeHAObj( [psobject] $mg , [psobject] $vm , [string] $nh )
     {
-        <#
-            $y line - Regex in case of message change?
-            $v line - Make ErrorVariable with actions?
-            Method performs two actions?  Split it out?  Less efficient split out?
-            Example output of $line.FullFormattedMessage above looks akin to:
-            vSphere HA restarted virtual machine MyFine on host ESX-Server-O1.example.com in cluster PROD-17
-        #>
-
-        $y = $line.FullFormattedMessage.Substring(37).split()
-        $v = Get-VM -Name $y[0].trim() -ErrorAction SilentlyContinue
         $lo = [pscustomobject]@{
-            VM = $v.Name
-            VMNotes = $v.Notes
-            NewHost = $y[3].trim()
-            DateTime = $line.CreatedTime
-            FullMessage = $line.FullFormattedMessage
+            VM = $vm.Name
+            VMNotes = $vm.Notes
+            NewHost = $nh
+            DateTime = $mg.CreatedTime
+            FullMessage = $mg.FullFormattedMessage
         }
         $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.HA.Restart.Info')
         return $lo
@@ -73,9 +63,19 @@ Function Get-HARestartInfo
 
     Process
     {
+        <#
+            $y line - Regex in case of message change?
+            $v line - Make ErrorVariable with actions?
+            Example output of $z.FullFormattedMessage looks akin to:
+            vSphere HA restarted virtual machine MyFine on host ESX-Server-O1.example.com in cluster PROD-17
+        #>
+        
         foreach ($z in $zz)
         {
-            $lo = [NewVClass]::ParseInfo($z)
+            $y = $z.FullFormattedMessage.Substring(37).split()
+            $v = Get-VM -Name $y[0].trim() -ErrorAction SilentlyContinue
+            $h = $y[3].trim()
+            $lo = [NewVClass]::MakeHAObj($z , $v , $h)
             $lo
         }
 
