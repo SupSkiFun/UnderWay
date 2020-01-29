@@ -80,6 +80,7 @@ function Set-VSphereAlarmConfigNew  # Remove trailing New
         Function SetState
         {
             param($Item , $State)
+            
             if ($state -eq "Enabled")
             {
                 $state = $true
