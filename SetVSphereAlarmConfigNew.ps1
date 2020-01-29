@@ -47,13 +47,13 @@ function Set-VSphereAlarmConfigNew  # Remove trailing New
     param
     (
         [Parameter(Mandatory = $false , ValueFromPipeline = $true)]
-        [VMware.VimAutomation.ViCore.Types.V1.Inventory.VirtualMachine[]] $VM,
+        [VMware.VimAutomation.ViCore.Types.V1.Inventory.VirtualMachine[]] $VM ,
 
         [Parameter(Mandatory = $false , ValueFromPipeline = $true)]
-        [VMware.VimAutomation.ViCore.Types.V1.Inventory.VMHost[]] $VMHost,
+        [VMware.VimAutomation.ViCore.Types.V1.Inventory.VMHost[]] $VMHost ,
 
         [Parameter(Mandatory = $false , ValueFromPipeline = $true)]
-        [VMware.VimAutomation.ViCore.Types.V1.Inventory.Cluster[]] $Cluster,
+        [VMware.VimAutomation.ViCore.Types.V1.Inventory.Cluster[]] $Cluster ,
 
         [Parameter(Mandatory = $true)]
         [ValidateSet("Enabled" , "Disabled")]
