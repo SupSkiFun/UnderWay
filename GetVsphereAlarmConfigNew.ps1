@@ -3,8 +3,8 @@ using module ./Vclasss.psm1  # Remove This
 .SYNOPSIS
 Returns Alarm Enabled Status from VMs, VMHosts and / or Clusters
 .DESCRIPTION
-Returns Alarm Enabled Status from VMs, VMHosts and / or Clusters via an object
-of Name, Enabled, and Type.
+Returns Alarm Enabled Status from VMs, VMHosts and / or Clusters via an object of
+Name, Enabled, and Type.  Requires VMs, VMHosts and / or Cluster objects to be piped in.
 .PARAMETER VM
 Output from VMWare PowerCLI Get-VM
 [VMware.VimAutomation.ViCore.Types.V1.Inventory.VirtualMachine]
@@ -59,8 +59,7 @@ function Get-VSphereAlarmConfigNew  # Update This- Remove trailing New
     Begin
     {
         $errmsg = "VM, VMHost, and / or Cluster Object Required. Try: Help Get-VSphereAlarmConfig -full"
-
-     }
+    }
 
     Process
     {
