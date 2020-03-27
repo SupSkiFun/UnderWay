@@ -1,4 +1,4 @@
-function Get-TagInfoTEST #Remove!
+function Get-TagInfo
 {
     [CmdletBinding()]
 

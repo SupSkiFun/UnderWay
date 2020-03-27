@@ -1,4 +1,4 @@
-Function Show-FolderContentTest #Remove
+Function Show-FolderContent
 {
     [CmdletBinding()]
     
@@ -28,7 +28,7 @@ Function Show-FolderContentTest #Remove
             $lo = [pscustomobject]@{
                 ItemName = $item.Name
                 ItemType = $type
-                ItemMoRef = $item.MoRef.ToString()  #changed here
+                ItemMoRef = $item.MoRef.ToString()
                 FolderName = $fol.Name
                 FolderID = $fol.ID
                 FolderPath = ($fol | Show-FolderPath).Path

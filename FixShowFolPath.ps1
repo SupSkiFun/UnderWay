@@ -1,4 +1,4 @@
-Function Show-FolderPathTesT #Remove!
+Function Show-FolderPath
 {
     [CmdletBinding()]
     
