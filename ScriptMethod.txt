@@ -16,3 +16,38 @@ and (non)requisite properties!
 Possbile to include when making CustomObject?
 
 Or insert akin to ? $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.AWS.EC2Instance.Info')
+
+More Items
+
+$myObject.PSObject.TypeNames.Insert(0,"My.Object")
+
+$myObject = [PSCustomObject]@{
+    PSTypeName = 'My.Object'
+    Name       = 'Kevin'
+    Language   = 'Powershell'
+    State      = 'Texas'
+}
+
+https://powershellexplained.com/2016-10-28-powershell-everything-you-wanted-to-know-about-pscustomobject/#dynamically-accessing-properties
+
+He was using Update-TypeData to specify the default properties.
+
+$TypeData = @{
+    TypeName = 'My.Object'
+    DefaultDisplayPropertySet = 'Name','Language'
+}
+Update-TypeData @TypeData
+
+
+
+$TypeData = @{
+    TypeName = 'My.Object'
+    MemberType = 'ScriptProperty'
+    MemberName = 'UpperCaseName'
+    Value = {$this.Name.toUpper()}
+}
+Update-TypeData @TypeData
+You can do this before your object is created or after and it will still work.
+This is what makes this different then using Add-Member with a script property.
+When you use Add-Member the way I referenced earlier, it only exists on that specific instance of the object.
+This one applies to all objects with this TypeName.
