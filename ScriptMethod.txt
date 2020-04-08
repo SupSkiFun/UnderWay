@@ -1,0 +1,18 @@
+Attach a script method to a custom object:
+
+$vv = Get-EC2Vpc | Show-EC2Vpc
+
+$uu = {
+	$this |
+		Select-Object -Property * -ExcludeProperty Object |
+			ConvertTo-Json -Depth 4
+}
+
+Add-Member -InputObject $vv -MemberType ScriptMethod -Name json -Value $uu
+
+Need to include this method on applicable custom objects going forward!  Pay heed to JSON depth
+and (non)requisite properties!
+
+Possbile to include when making CustomObject?
+
+Or insert akin to ? $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.AWS.EC2Instance.Info')
