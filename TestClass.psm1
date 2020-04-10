@@ -1,4 +1,0 @@
-class SupSkiFunAWSInfo
-{
-    [string] $ValueA
-}
