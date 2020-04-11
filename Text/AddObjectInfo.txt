@@ -1,3 +1,7 @@
+<#
+    In addition to Json, make a Tags Function that expands Tags?
+#>
+
 $a = Get-EC2Vpc | show-ec2vpc
 
 $TypeData = @{
@@ -7,20 +11,23 @@ $TypeData = @{
     Value = {$this| Select * -ExcludeProperty Object | ConvertTo-Json -Depth 4}
 }
 
-Update-TypeData @TypeData
+Update-TypeData @TypeData -Force
 
 $TypeData2 = @{
     TypeName = 'SupSkiFun.AWS.VPC.Info'
     DefaultDisplayPropertySet = "Name","CidrBlock","VpcID","IsDefault"
 }
 
-Update-TypeData @TypeData2
+Update-TypeData @TypeData2 -Force
 
-Make this a type 3?
-Update-TypeData -TypeName SupSkiFun.AWS.VPC.Info -DefaultDisplayProperty Name
+$TypeData3 = @{
+    TypeName = 'SupSkiFun.AWS.VPC.Info'
+    DefaultDisplayProperty = "Name"
+}
 
-This Works!
-$a | Add-Member -MemberType PropertySet -Name A -Value name
+Update-TypeData @TypeData3 -Force
+
+$a | Add-Member -MemberType PropertySet -Name NST -Value Name, State, Tags
 
 
 Below Not Working
@@ -37,6 +44,8 @@ Just use -Force with above for repeat commands?  Or test with  Get-TypeData -Typ
 I think just use -Force
 
 
+Option to TypeData3 above
+Update-TypeData -TypeName SupSkiFun.AWS.VPC.Info -DefaultDisplayProperty Name
 
 $s = {$this | Select * -ExcludeProperty Object | ConvertTo-Json -Depth 4}
 
