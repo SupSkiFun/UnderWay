@@ -19,6 +19,9 @@ Update-TypeData @TypeData2
 Make this a type 3?
 Update-TypeData -TypeName SupSkiFun.AWS.VPC.Info -DefaultDisplayProperty Name
 
+This Works!
+$a | Add-Member -MemberType PropertySet -Name A -Value name
+
 
 Below Not Working
 
