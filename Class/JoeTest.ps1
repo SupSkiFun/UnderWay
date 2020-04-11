@@ -1,4 +1,6 @@
-using module .\TestClass.psm1
+using module .\JoeClass.psm1
+
+
 $arr = (
     1 , 12 , 123 , 1234 , 12345 , 123456 , 1234567 , 12345678 , 123456789 , 1234567891 ,
     12345678912 ,  123456789123 ,  1234567891234 ,  12345678912345 ,  123456789123456 ,  1234567891234567 ,
@@ -7,5 +9,10 @@ $arr = (
 
 foreach ($a in $arr)
 {
-    [GenFunctions]::GetSize($a)
+    [GenFunctions]::MakeInfo($a)
 }
+
+
+
+
+

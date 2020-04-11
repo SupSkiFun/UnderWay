@@ -1,8 +1,3 @@
-class SupSkiFunAWSInfo
-{
-    [string] $ValueA
-}
-
 class GenFunctions
 {
     hidden [string] Static GetSize ( [Int64] $num )
@@ -20,4 +15,9 @@ class GenFunctions
         return $size
     }
 
+    [string] Static MakeInfo ([int64] $length)
+    {
+        $xfer = [GenFunctions]::GetSize($length)
+        return $xfer
+    }
 }
