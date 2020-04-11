@@ -1,0 +1,39 @@
+$a = Get-EC2Vpc | show-ec2vpc
+
+$TypeData = @{
+    TypeName = 'SupSkiFun.AWS.VPC.Info'
+    MemberType = 'ScriptMethod'
+    MemberName = 'Json'
+    Value = {$this| Select * -ExcludeProperty Object | ConvertTo-Json -Depth 4}
+}
+
+Update-TypeData @TypeData
+
+$TypeData2 = @{
+    TypeName = 'SupSkiFun.AWS.VPC.Info'
+    DefaultDisplayPropertySet = "Name","CidrBlock","VpcID","IsDefault"
+}
+
+Update-TypeData @TypeData2
+
+Make this a type 3?
+Update-TypeData -TypeName SupSkiFun.AWS.VPC.Info -DefaultDisplayProperty Name
+
+
+Below Not Working
+
+$TypeData4 = @{
+    TypeName = 'SupSkiFun.AWS.VPC.Info'
+    PropertySet = 'NC'
+    Value = "Name","CidrBlock"
+}
+
+Update-TypeData @TypeData4
+
+Just use -Force with above for repeat commands?  Or test with  Get-TypeData -TypeName SupSkiFun.AWS.VPC.Info
+I think just use -Force
+
+
+
+$s = {$this | Select * -ExcludeProperty Object | ConvertTo-Json -Depth 4}
+
