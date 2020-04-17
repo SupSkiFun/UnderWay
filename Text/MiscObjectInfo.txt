@@ -51,3 +51,22 @@ You can do this before your object is created or after and it will still work.
 This is what makes this different then using Add-Member with a script property.
 When you use Add-Member the way I referenced earlier, it only exists on that specific instance of the object.
 This one applies to all objects with this TypeName.
+
+
+General Notes
+1. AF - OutputType along with creating a class will enable Intellisense - Needs proving / testing
+2. Test out with new AF
+    DefaultDisplayPropertySet
+    ScriptMethod
+    ScriptProperty
+    PropertySet
+
+2.5  Class - call Internal method - hidden - update nfunctions perhaps?
+
+
+3. Start using -OV for pipeline exploring
+4. $Psitem in place of $_
+5. .PsStandardMembers
+6.  Find Jeffrey Snover's Convert-ObjectToClass
+7.  Find PowerShell cookbook
+
