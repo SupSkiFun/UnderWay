@@ -51,7 +51,7 @@ class dClass
             Type = $rp.GetType().Name.ToString()
             RecoveryPlanVMCount = $rpvmcnt
             EmptyProtectionGroup = $MTpg
-            EmptyPGName = $arr2
+            EmptyProtectionGroupName = $arr2
             ProtectionGroupCount = $prgcnt
             ProtectionGroups = $arr1
         }

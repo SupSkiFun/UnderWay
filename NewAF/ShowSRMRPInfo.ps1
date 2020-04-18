@@ -12,10 +12,10 @@ Shows Recovery Plan Detailed Information for submitted Recovery Plans including 
 affiliated Protection Groups.  If no Recovery Plans or parameters are specified, returns detailed information
 for all Recovery Plans.  See Examples.  Can be run on recovery or protected site.
 .NOTES
-1. $allRP = Show-SRMRecoveryPlanInfo (is equivalent to) $allRP = Show-SRMRecoveryPlanInfo -All.
-2.
-        NEED INFO HERE
-
+1. See examples!
+2. $allRP = Show-SRMRecoveryPlanInfo (is equivalent to) $allRP = Show-SRMRecoveryPlanInfo -All
+3. By default, a subset of info is displayed. Use Select *, Format-List *, etc. to view all info.
+4. All properties can be output in JSON using the ScriptMethod .Json()
 .PARAMETER All
 Optional.  If specified returns detailed information for all Recovery Plans.
 .PARAMETER RecoveryPlan
@@ -97,5 +97,37 @@ Function Show-SRMRecoveryPlanInfo
             $lo = [dClass]::MakeRPInfoObj($rp)
             $lo
         }
+    }
+
+    End
+    {
+        $TypeName = 'SupSkiFun.SRM.Recovery.Plan.Info'
+
+        $TypeData1 = @{
+            TypeName = $TypeName
+            MemberType = 'ScriptMethod'
+            MemberName = 'Json'
+            Value = {$this | ConvertTo-Json -Depth 4}
+        }
+
+        $TypeData2 = @{
+            TypeName = $TypeName
+            DefaultDisplayPropertySet = (
+                "Name" ,
+                "State" ,
+                "EmptyProtectionGroup" ,
+                "EmptyProtectionGroupName" ,
+                "ProtectionGroupCount"
+            )
+        }
+
+        $TypeData3 = @{
+            TypeName = $TypeName
+            DefaultDisplayProperty = "Name"
+        }
+
+        Update-TypeData @TypeData1 -Force
+        Update-TypeData @TypeData2 -Force
+        Update-TypeData @TypeData3 -Force
     }
 }
