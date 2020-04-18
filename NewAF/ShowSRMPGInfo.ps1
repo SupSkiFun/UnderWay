@@ -14,7 +14,7 @@ Can be run on recovery or protected site.
 .NOTES
 1. See examples!
 2. Show-SRMProtectionGroupInfo (is equivalent to) Show-SRMProtectionGroupInfo -All
-3. By default, a subset of info is displayed. Use Select *, Format-List *, etc. to view all info.
+3. By default a subset of info is displayed. Use Select * , Format-List * , etc. to view all info.
 4. All properties can be output in JSON using the ScriptMethod .Json()
 .PARAMETER All
 Optional.  If specified returns detailed information for all Protection Groups.
@@ -24,7 +24,7 @@ Optional.  Protection Group Object.  See Examples.
 .INPUTS
 [VMware.VimAutomation.Srm.Views.SrmProtectionGroup]
 .OUTPUTS
-PSCUSTOMOBJECT SupSkiFun.SRM.Protection.Group.Info
+[pscustomobject] SupSkiFun.SRM.Protection.Group.Info
 .EXAMPLE
 See Below:
 Return all SRM Protection Groups into a variable:
@@ -42,9 +42,12 @@ See Below:
 Return specific SRM Protection Group(s) matching a criteria into a variable:
 $myPG = Get-SRMProtectionGroup | Where-Object -Property Name -Match "EX07*"
 $MyVar = $myPG | Show-SRMProtectionGroupInfo
+$MyVar
 .EXAMPLE
 See Below:
-Some Data
+Output SRM Protection Group Object in JSON:
+$allPG = Show-SRMProtectionGroupInfo
+$allPG.json()
 .LINK
 Get-SRMProtectionGroup
 Show-SRMRecoveryPlanInfo
@@ -57,10 +60,11 @@ Function Show-SRMProtectionGroupInfo
     Param
     (
         [Parameter(ParameterSetName = "All")]
-        [switch] $All,
+        [switch]
+        $All,
 
         [Parameter(ParameterSetName = "PG", ValueFromPipeline = $true)]
-        #[VMware.VimAutomation.Srm.Views.SrmProtectionGroup[]]
+        [VMware.VimAutomation.Srm.Views.SrmProtectionGroup[]]
         $ProtectionGroup
     )
 

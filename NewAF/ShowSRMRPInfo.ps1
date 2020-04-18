@@ -14,8 +14,9 @@ for all Recovery Plans.  See Examples.  Can be run on recovery or protected site
 .NOTES
 1. See examples!
 2. $allRP = Show-SRMRecoveryPlanInfo (is equivalent to) $allRP = Show-SRMRecoveryPlanInfo -All
-3. By default, a subset of info is displayed. Use Select *, Format-List *, etc. to view all info.
+3. By default a subset of info is displayed. Use Select * , Format-List * , etc. to view all info.
 4. All properties can be output in JSON using the ScriptMethod .Json()
+5. Access Embedded SRM Protection Groups using property .ProtectionGroups
 .PARAMETER All
 Optional.  If specified returns detailed information for all Recovery Plans.
 .PARAMETER RecoveryPlan
@@ -24,49 +25,52 @@ Optional.  SRM Recovery Plan Object.  See Examples.
 .INPUTS
 [VMware.VimAutomation.Srm.Views.SrmRecoveryPlan]
 .OUTPUTS
-PSCUSTOMOBJECT SupSkiFun.SRM.Recovery.Plan.Info with embedded PSCUSTOMOBJECT SupSkiFun.SRM.Protection.Group.Info
+[pscustomobject] SupSkiFun.SRM.Recovery.Plan.Info with embedded [pscustomobject] SupSkiFun.SRM.Protection.Group.Info
 .EXAMPLE
+See Below:
 Return all SRM Recovery Plans into a variable:
 $allRP = Show-SRMRecoveryPlanInfo
+
+Default Output:
+$allRP
+
+Extended Output:
+$allRP | Format-List -Property *
+        or
+$allRP | Select-Object -Property *
 .EXAMPLE
+See Below:
 Return specific SRM Recovery Plan(s) matching a criteria into a variable:
 $myRP = Get-SRMRecoveryPlan | Where-Object -Property Name -Match "EX07*"
 $MyVar = $myRP | Show-SRMRecoveryPlanInfo
+
+Default Output:
+$MyVar
+
+Embedded Protection Group Output:
+$MyVar.ProtectionGroups
 .EXAMPLE
-
-        NEED INFO HERE
-
-.EXAMPLE
-
-        NEED INFO HERE
-
-
-.EXAMPLE
-
-        NEED INFO HERE
-
+See Below:
+Output SRM Recovery Plan Object in JSON:
+$allRP = Show-SRMRecoveryPlanInfo
+$allRP.json()
 .LINK
 Get-SRMRecoveryPlan
 Show-SRMProtectionGroupInfo
 #>
 
-
-
-
-
-<#
-    Update all above Help
-#>
-
 Function Show-SRMRecoveryPlanInfo
 {
     [CmdletBinding(DefaultParameterSetName = "All")]
-    param (
+    Param
+    (
         [Parameter(ParameterSetName = "All")]
-        [switch] $All,
+        [switch]
+        $All,
 
         [Parameter(ParameterSetName = "RP", ValueFromPipeline = $true)]
-        [VMware.VimAutomation.Srm.Views.SrmRecoveryPlan[]] $RecoveryPlan
+        [VMware.VimAutomation.Srm.Views.SrmRecoveryPlan[]]
+        $RecoveryPlan
     )
 
     Begin
@@ -117,7 +121,8 @@ Function Show-SRMRecoveryPlanInfo
                 "State" ,
                 "EmptyProtectionGroup" ,
                 "EmptyProtectionGroupName" ,
-                "ProtectionGroupCount"
+                "ProtectionGroupCount" ,
+                "ProtectionGroups"
             )
         }
 
