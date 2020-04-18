@@ -5,8 +5,7 @@ class dClass
         $pginfo = $pg.GetInfo()
         $pgvms = $pg.ListProtectedVms().VMName
         $vmpgcnt = $pgvms.count
-        if ($vmpgcnt -eq 0) {}
-        
+
         $lo = [pscustomobject] @{
             Name = $pginfo.Name
             Configured = $pg.CheckConfigured()
@@ -19,7 +18,7 @@ class dClass
         $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.SRM.Protection.Group.Info')
         return $lo
     }
-    
+
     static [pscustomobject] MakeRPInfoObj ( [psobject] $rp )
     {
         $arr1 = [System.Collections.Arraylist]::new()
@@ -33,18 +32,17 @@ class dClass
             $pgo = [dClass]::MakePGInfoObj($pg)
             $arr1.add($pgo)
             $qpg = [dClass]::QueryPGObj($pgo)
+            $rpvmcnt += $qpg.'Count'        #  Need the 'Count' or remove the quotes?
             if ($qpg.Name)
             {
                 $arr2.add($qpg.Name)
             }
-            $rpvmcnt += $qpg.'Count'
         }
 
-        if ( $arr2 ) 
+        if ( $arr2 )
         {
             $MTpg = $true
         }
-
 
         $lo = [pscustomobject]@{
             RecoveryPlan = $rpinfo.Name
@@ -94,29 +92,9 @@ Function Get-SRMRecoveryPlanInfo
     foreach ($rp in $rpall)
     {
         $lo = [dClass]::MakeRPInfoObj($rp)
-        $lo        
-    } 
+        $lo
+    }
 }
-
-<#
-    $MTprg = $false
-    $rpinfo = $plan.GetInfo()
-    $rptype = $plan.GetType().Name
-    $prgcnt = $rpinfo.ProtectionGroups.Count
-
-    foreach ($prg in $rpinfo.ProtectionGroups) 
-    {
-        $prginfo = $prg.GetInfo()
-        $prgvms = $prg.ListProtectedVms().VMName
-        $vmprgcnt = $prgvms.count
-        if ($vmprgcnt -eq 0) 
-        {
-            $MTprg = $true 
-            [void] $arr2.add($prginfo.Name)
-        } 
-}
-
-#>
 
 #Get-SRMProtectionGroupInfo
 Get-SRMRecoveryPlanInfo
