@@ -88,7 +88,7 @@ Function Get-SRMProtectionGroupInfo
 
 Function Get-SRMRecoveryPlanInfo
 {
-    $rpall = Get-SRMRecoveryPlan #  Select-Object  -First 5   # Just for testing - needs to be a parameter
+    $rpall = Get-SRMRecoveryPlan # | Select-Object  -First 5   # Just for testing - needs to be a parameter
     foreach ($rp in $rpall)
     {
         $lo = [dClass]::MakeRPInfoObj($rp)
