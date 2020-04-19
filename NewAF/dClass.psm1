@@ -7,7 +7,7 @@ class dClass
         $vmpgcnt = $pgvms.count
 
         $lo = [pscustomobject] @{
-            Name = $pginfo.Name
+            ProtectionGroup = $pginfo.Name
             Configured = $pg.CheckConfigured()
             State = $pg.GetProtectionState().ToString()
             Type = $pginfo.Type.ToString()
@@ -32,7 +32,7 @@ class dClass
             $pgo = [dClass]::MakePGInfoObj($pg)
             $arr1.add($pgo)
             $qpg = [dClass]::QueryPGObj($pgo)
-            $rpvmcnt += $qpg.'Count'        #  Need the 'Count' or remove the quotes?
+            $rpvmcnt += $qpg.Count
             if ($qpg.Name)
             {
                 $arr2.add($qpg.Name)

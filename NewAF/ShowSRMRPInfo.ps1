@@ -93,7 +93,7 @@ Function Show-SRMRecoveryPlanInfo
         }
         else
         {
-            $rps = $srmED.Protection.ListProtectionGroups()
+            $rps = $srmED.Recovery.ListPlans()
         }
 
         foreach ($rp in $rps)
@@ -117,8 +117,9 @@ Function Show-SRMRecoveryPlanInfo
         $TypeData2 = @{
             TypeName = $TypeName
             DefaultDisplayPropertySet = (
-                "Name" ,
+                "RecoveryPlan" ,
                 "State" ,
+                "RecoveryPlanVMCount" ,
                 "EmptyProtectionGroup" ,
                 "EmptyProtectionGroupName" ,
                 "ProtectionGroupCount" ,

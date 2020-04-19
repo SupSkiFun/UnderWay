@@ -112,7 +112,7 @@ Function Show-SRMProtectionGroupInfo
         $TypeData2 = @{
             TypeName = $TypeName
             DefaultDisplayPropertySet = (
-                "Name" ,
+                "ProtectionGroup" ,
                 "Configured" ,
                 "State" ,
                 "VMCount" ,
