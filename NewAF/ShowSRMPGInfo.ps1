@@ -15,7 +15,8 @@ Can be run on recovery or protected site.
 1. See examples!
 2. Show-SRMProtectionGroupInfo (is equivalent to) Show-SRMProtectionGroupInfo -All
 3. By default a subset of info is displayed. Use Select * , Format-List * , etc. to view all info.
-4. All properties can be output in JSON using the ScriptMethod .Json()
+4. All properties can be output in JSON using the ScriptMethod .Json().  This is for terminal-viewing-convenience.
+.Json() outputs a series of objects, not a list of objects.  For output in a list / to a file, use ConvertTo-Json. 
 .PARAMETER All
 Optional.  If specified returns detailed information for all Protection Groups.
 .PARAMETER ProtectionGroup
@@ -44,10 +45,10 @@ $myPG = Get-SRMProtectionGroup | Where-Object -Property Name -Match "EX07*"
 $MyVar = $myPG | Show-SRMProtectionGroupInfo
 $MyVar
 .EXAMPLE
-See Below:
+Experimental.  See Notes and Below:
 Output SRM Protection Group Object in JSON:
 $allPG = Show-SRMProtectionGroupInfo
-$allPG.json()
+$allPG.Json()
 .LINK
 Get-SRMProtectionGroup
 Show-SRMRecoveryPlanInfo

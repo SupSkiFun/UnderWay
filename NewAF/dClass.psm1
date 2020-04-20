@@ -24,7 +24,6 @@ class dClass
     {
         $arr1 = [System.Collections.Arraylist]::new()
         $arr2 = [System.Collections.Arraylist]::new()
-
         [int] $rpvmcnt = 0
         $rpinfo = $rp.GetInfo()
         $prgcnt = $rpinfo.ProtectionGroups.Count
@@ -46,7 +45,7 @@ class dClass
         }
         elseif ($prgcnt -eq 0)
         {
-            $MTpg = "N/A"
+            $MTpg = "NoProtectionGroupsExist"
         }
         else
         {

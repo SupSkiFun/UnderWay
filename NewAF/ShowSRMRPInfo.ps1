@@ -15,8 +15,9 @@ for all Recovery Plans.  See Examples.  Can be run on recovery or protected site
 1. See examples!
 2. $allRP = Show-SRMRecoveryPlanInfo (is equivalent to) $allRP = Show-SRMRecoveryPlanInfo -All
 3. By default a subset of info is displayed. Use Select * , Format-List * , etc. to view all info.
-4. All properties can be output in JSON using the ScriptMethod .Json()
-5. Access Embedded SRM Protection Groups using property .ProtectionGroups
+4. Access Embedded SRM Protection Groups using property .ProtectionGroups
+5. All properties can be output in JSON using the ScriptMethod .Json().  This is for terminal-viewing-convenience.
+.Json() outputs a series of objects not a list of objects.  For output in a list / to a file, use ConvertTo-Json. 
 .PARAMETER All
 Optional.  If specified returns detailed information for all Recovery Plans.
 .PARAMETER RecoveryPlan
@@ -50,10 +51,10 @@ $MyVar
 Embedded Protection Group Output:
 $MyVar.ProtectionGroups
 .EXAMPLE
-See Below:
+Experimental.  See Notes and Below:
 Output SRM Recovery Plan Object in JSON:
 $allRP = Show-SRMRecoveryPlanInfo
-$allRP.json()
+$allRP.Json()
 .LINK
 Get-SRMRecoveryPlan
 Show-SRMProtectionGroupInfo
