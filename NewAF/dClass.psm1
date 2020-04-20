@@ -8,6 +8,7 @@ class dClass
 
         $lo = [pscustomobject] @{
             ProtectionGroup = $pginfo.Name
+            Description = $pginfo.Description
             Configured = $pg.CheckConfigured()
             State = $pg.GetProtectionState().ToString()
             Type = $pginfo.Type.ToString()
@@ -43,6 +44,11 @@ class dClass
         {
             $MTpg = $true
         }
+        #  Combine These into if / elsif ?
+        if ($prgcnt -eq 0)
+        {
+            $MTpg = "N/A"
+        }
 
         $lo = [pscustomobject]@{
             RecoveryPlan = $rpinfo.Name
@@ -66,7 +72,8 @@ class dClass
         if ($vmc -eq 0)
         #if ($vmc -lt 12)   # Just for testing
         {
-            $nom = $pgo.Name
+            #$nom = $pgo.Name   Think this was breaking the report
+            $nom = $pgo.ProtectionGroup
         }
         $hash = @{
             Name = $nom

@@ -87,7 +87,7 @@ Function Show-SRMRecoveryPlanInfo
     Process
     {
 
-        if ($ProtectionGroup)
+        if ($RecoveryPlan)
         {
             $rps = $RecoveryPlan
         }
