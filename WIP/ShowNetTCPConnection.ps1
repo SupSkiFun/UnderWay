@@ -2,7 +2,6 @@
 $pp = Get-NetTCPConnection -State Established |? {$_.RemoteAddress -notmatch "^127" -and $_.RemoteAddress -notmatch "::1" }
 $op = $pp.OwningProcess | Select -Unique
 $qp = Get-Process -PID $op | Select Id , Name , Description, Company, Path
-
 $uri = 'http://api.ipapi.com/'  # Keep Trailing Slash - code around that
 #$cle = 'PUT API Key Here'
 $cle = Get-Content apikey.txt
