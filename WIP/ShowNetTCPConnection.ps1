@@ -22,6 +22,7 @@ Function SetParams
             output = 'json'
             fields = 'ip,country_name,region_name,city'  # Intentionally no Space
         }
+        $script:cleOK = $true
     }
     else
     {
@@ -39,15 +40,15 @@ Function GetIpInfo
         ErrorAction = "SilentlyContinue"
         ErrorVariable = "err"
     }
-    $r2 = Invoke-RestMethod @IRP
-    if ($err)
+
+    try
     {
-        $msg = "Error obtaining IP Info from API"
-        $msg
-    }
-    else
-    {
+        $r2 = Invoke-RestMethod @IRP
         $r2
+    }
+    catch
+    {
+        "REST API Request Error. " + $err.Message
     }
 }
 
@@ -65,8 +66,9 @@ Function MakeObj
         }
         else
         {
-            $ipinfo = "API Key Not Found"
+            $ipinfo = "Not Attempted.  REST API Key Not Found"
         }
+
         $lo = [pscustomobject]@{
             LocalAddress = $p.LocalAddress
             LocalPort = $p.LocalPort
