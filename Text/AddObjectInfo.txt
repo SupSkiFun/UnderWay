@@ -2,6 +2,8 @@
     In addition to Json, make a Tags Function that expands Tags?
 #>
 
+One Change
+
 $a = Get-EC2Vpc | show-ec2vpc
 
 $TypeData = @{
