@@ -17,12 +17,12 @@ Function MakeObj
 {
     param($api , $res)
     $lo = [PSCustomObject]@{
-        ApiGroupName = $api.name
-        ApiGroupVersion = $api.preferredVersion.groupVersion
-        ApiVersion = $api.preferredVersion.version
-        ApiResourceName = $res.name
-        ResourceKind = $res.kind
-        ResourceShortNames = $res.shortNames
+        GroupName = $api.name
+        GroupVersion = $api.preferredVersion.groupVersion
+        Version = $api.preferredVersion.version
+        ResourceName = $res.name
+        ResourceeKind = $res.kind
+        ShortName = $res.shortNames
     }
     return $lo
 }
@@ -37,8 +37,8 @@ Function ProcessInfo
         foreach ($res in $resi)
         {
             $lo = MakeObj -api $api -res $res
+            $lo  
         }
-        $lo    
     }
 }
 
