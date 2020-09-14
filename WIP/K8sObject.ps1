@@ -1,21 +1,26 @@
 class K8sAPI
 {
-    static $uria = '/apis/'
+    static $uria = 'apis/'
 
-    [psobject] GetApiInfo ( [uri] $mainurl )
+    static [psobject] GetApiInfo ( [uri] $mainurl )
     {
         $apis =  Invoke-RestMethod -Method Get -Uri $mainurl
         return $apis
     }
 
-    [psobject] GetResourceInfo ( [uri] $url )
+    static [psobject] GetResourceInfo ( [uri] $url )
     {
         $resq = Invoke-RestMethod -Method Get -Uri $url
         $resi = $resq.resources.Where({$_.name -notmatch "/"})
         return $resi
     }
 
-    [pscustomobject] MakeObj ( $nom, $grv, $res, $prv )
+    static [pscustomobject] MakeObj (
+            [string] $nom ,
+            [psobject] $grv ,
+            [psobject] $res ,
+            [string] $prv
+        )
     {
         $gvv = $grv.groupVersion
 
@@ -65,23 +70,18 @@ Function Get-K8sAPIInfo
     Param
     (
         [Parameter(Mandatory = $true , ValueFromPipeline = $true)]
-        [uri] $Uri
+        [Uri] $Uri
     )
 
     Begin
     {
-        #$uria = "/apis/"
-        $reqver = 7
-        $actver = $PSVersionTable.PSVersion.Major
-        $message = "PowerShell Version"
-
-        if ( $reqver -ne $actver )
+        if ( ([uri] $uri).IsAbsoluteUri -eq $false )
         {
-            Write-Output "Terminating.  $message $reqver required.  $message $actver detected."
+            Write-Output "Terminating.  Non-valid URL detected.  Submitted URL:  $uri"
             break
         }
 
-        $mainurl = ($Uri+$([K8sAPI]::uria))
+        $mainurl = ($($Uri.AbsoluteUri)+$([K8sAPI]::uria))
     }
 
     Process
@@ -106,13 +106,13 @@ Function Get-K8sAPIInfo
     }
 }
 
-#  Ternary operator ? <if-true> : <if-false>
-#  Ports 1024-65535
-#  Make URL a class static variable / property?
-#  Check for PowerShell 7
+
 #  [uri]::new("https://127.0.0.1:8888")
 #  Make a default view with just a subset of properties
-#  Make parameter sets?  port and uri?  Or just port on localhost?
-#  $baseurl = 'http://127.0.0.1:8888/'    # Needs to be a parameter ; reg exp or maybe there is .NET type  [httpurl]
-#  $apis = GetApiInfo
-#  ProcessInfo($apis)
+#  $baseurl = 'http://127.0.0.1:8888/'   
+
+<#
+    Error Message:
+        PreferredVersion = ( $prv -eq $gvv ? $true : $false )
+        Unexpected token '?' in expression or statement.
+#>
