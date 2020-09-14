@@ -2,13 +2,13 @@ class K8sAPI
 {
     static $uria = 'apis/'
 
-    static [psobject] GetApiInfo ( [uri] $mainurl )
+    static [psobject] GetApiInfo ( [string] $mainurl )
     {
         $apis =  Invoke-RestMethod -Method Get -Uri $mainurl
         return $apis
     }
 
-    static [psobject] GetResourceInfo ( [uri] $url )
+    static [psobject] GetResourceInfo ( [string] $url )
     {
         $resq = Invoke-RestMethod -Method Get -Uri $url
         $resi = $resq.resources.Where({$_.name -notmatch "/"})
@@ -43,7 +43,9 @@ class K8sAPI
 .SYNOPSIS
 Produces an object of Kubernetes API Groups and Resources.
 .DESCRIPTION
-Produces an object of Kubernetes API Groups and Resources, via proxied connection.  See Notes and Examples.
+Produces an object of Kubernetes API Groups and Resources via proxied connection.
+Combines the output of (kubectl api-resources) and (kubectl api-versions).
+See Notes and Examples.
 .PARAMETER Uri
 URI that has been proxied via kubectl.
 .INPUTS
@@ -51,17 +53,46 @@ URI that has been proxied via kubectl.
 .OUTPUTS
 pscustombobject SupSkiFun.Kubernetes.API.Info
 .NOTES
-NEED
-INFO
-HERE
+1.  PowerShell 7 Required because a ternary operator is used.  Using a version lower than 7 will error akin to:
+        PreferredVersion = ( $prv -eq $gvv ? $true : $false )
+        Unexpected token '?' in expression or statement.
+2.  For the command to work properly
+    Ensure that the API has been proxied, akin to:  kubectl proxy --port 8888 &
+    Dot Source the Advanced Function:  . ./Your/Path/GetK8sAPIInfo.ps1
+    Run the command, returning the information into a variable:  $myVar = Get-K8sAPIInfo
+3.  The DefaultDisplayPropertySet = "GroupName","GroupVersion","ResourceKind","ResourceName"
+    To see all properties, issue either:
+        $myVar | Format-List -Property *
+        $myVar | Select-Object -Property *
 .EXAMPLE
-NEED
-INFO
-HERE
-.EXAMPLE
-NEED
-INFO
-HERE
+Before this Advanced Function will work, a proxy to the API must be configured.
+
+Note any free port above 1024 can be used; if using a port different than 8888, substitute accordingly in both references below.
+    kubectl proxy --port 8888 &
+
+Once the proxy is established:
+    $myVar = Get-K8sAPIInfo -Uri http://localhost:8888
+
+Display the Default Property Set of all Groups / Resources:
+    $myVar
+
+Display all Properties of all Groups / Resources:
+    $myVar | Format-List -Property *
+
+Display all Preferred Version Groups / Resources:
+    $myVar | Where-Object -Property PreferredVersion -eq $true
+        or
+    $myVar | Where-Object -Property PreferredVersion -eq $true | fl *
+
+Display all Groups / Resources within the apps group:
+    $myVar | Where-Object -Property GroupName -eq apps
+        or
+    $myVar | Where-Object -Property GroupName -eq apps | fl *
+
+Display all Groups / Resources matching the ResourceKind Role:
+    $myVar | Where-Object -Property ResourceKind -match role
+        or
+    $myVar | Where-Object -Property ResourceKind -match role | fl *
 #>
 
 Function Get-K8sAPIInfo
@@ -104,15 +135,13 @@ Function Get-K8sAPIInfo
             }
         }
     }
+
+    End
+    {
+        $TypeData = @{
+            TypeName = 'SupSkiFun.Kubernetes.API.Info'
+            DefaultDisplayPropertySet = "GroupName","GroupVersion","ResourceKind","ResourceName"
+        }
+        Update-TypeData @TypeData -Force
+    }
 }
-
-
-#  [uri]::new("https://127.0.0.1:8888")
-#  Make a default view with just a subset of properties
-#  $baseurl = 'http://127.0.0.1:8888/'   
-
-<#
-    Error Message:
-        PreferredVersion = ( $prv -eq $gvv ? $true : $false )
-        Unexpected token '?' in expression or statement.
-#>
