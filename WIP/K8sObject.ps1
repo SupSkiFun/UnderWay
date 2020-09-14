@@ -55,7 +55,8 @@ Function ProcessInfo
 }
 
 # Ternary operator ? <if-true> : <if-false>
-
+#  Ports 1024-65535
+#  Make URL a class static variable / property?
 # Check for PowerShell 7
 #  [uri]::new("https://127.0.0.1:8888")
 #  Make a default view with just a subset of properties
