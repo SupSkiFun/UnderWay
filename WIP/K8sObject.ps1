@@ -54,13 +54,20 @@ Function ProcessInfo
     }
 }
 
-# Ternary operator ? <if-true> : <if-false>
-#  Ports 1024-65535
-#  Make URL a class static variable / property?
-# Check for PowerShell 7
-#  [uri]::new("https://127.0.0.1:8888")
-#  Make a default view with just a subset of properties
-#  Make parameter sets?  port and uri?  Or just port on localhost?
-$baseurl = 'http://127.0.0.1:8888/'    # Needs to be a parameter ; reg exp or maybe there is .NET type  [httpurl]
+
 $apis = GetApiInfo
 ProcessInfo($apis)
+
+<#
+    Random Thoughts
+
+Ternary operator ? <if-true> : <if-false>
+Ports 1024-65535
+Make URL a class static variable / property?
+Check for PowerShell 7
+[uri]::new("https://127.0.0.1:8888")
+Make a default view with just a subset of properties
+Make parameter sets?  port and uri?  Or just port on localhost?
+$baseurl = 'http://127.0.0.1:8888/'    # Needs to be a parameter ; reg exp or maybe there is .NET type  [httpurl]
+
+#>
