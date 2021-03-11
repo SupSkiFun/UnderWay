@@ -9,7 +9,7 @@ Class DellFirm
         'Dell 12Gbps HBA'
     )
 
-    static [pscustomobject] MakeObj ( [psobject] $fval , [string] $hname)
+    static [pscustomobject] MakeObj ( [psobject] $fval , [string] $hname )
     {
         $lo = [pscustomobject]@{
             ElementName = $fval.ElementName
@@ -46,7 +46,7 @@ Function Get-Firmware
         $jj = $pl |
             ConvertFrom-Json
         <# For Testing:  $jj = Get-Content ./all.json | ConvertFrom-Json #>
-        $hh = $jj.plays.tasks.hosts.psobject.properties.Where({$_.membertype -match 'NoteProperty'}).Name
+        $hh = $jj.plays.tasks.hosts.psobject.properties.Where({$_.MemberType -match 'NoteProperty'}).Name
         $kk = $jj.plays.tasks.hosts
     }
 
