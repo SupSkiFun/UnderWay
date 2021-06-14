@@ -1,5 +1,6 @@
 <#
     In addition to Json, make a Tags Function that expands Tags?
+    More info here
 #>
 
 $a = Get-EC2Vpc | show-ec2vpc
