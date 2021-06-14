@@ -9,7 +9,7 @@ Class DellFirm
         'Dell 12Gbps HBA'
     )
 
-    static [pscustomobject] MakeObj ( [psobject] $fval , [string] $hname)
+    static [pscustomobject] MakeObj ( [psobject] $fval , [string] $hname )
     {
         $lo = [pscustomobject]@{
             ElementName = $fval.ElementName
@@ -25,9 +25,6 @@ Class DellFirm
         $lo.PSObject.TypeNames.Insert(0,'SupSkiFun.Dell.Firmware.Info')
         return $lo
     }
-
-
-
 }
 
 <#
@@ -45,15 +42,11 @@ Function Get-Firmware
     {
         $firm = [DellFirm]::firm
         $env:ANSIBLE_STDOUT_CALLBACK="json"
-        <#
-            For Real, uncomment these three - comment out the two below
-            $pl =  ansible-playbook -i /home/ansible/YAML/hosts /home/ansible/YAML/synch.yml
-            $jj = $pl |
+        $pl =  ansible-playbook -i /home/ansible/YAML/inventory /home/ansible/YAML/GetFirmware.yml --ask-vault-password
+        $jj = $pl |
             ConvertFrom-Json
-        #>
-        $jj = Get-Content ./all.json |
-            ConvertFrom-Json
-        $hh = $jj.plays.tasks.hosts.psobject.properties.Where({$_.membertype -match 'NoteProperty'}).Name
+        <# For Testing:  $jj = Get-Content ./all.json | ConvertFrom-Json #>
+        $hh = $jj.plays.tasks.hosts.psobject.properties.Where({$_.MemberType -match 'NoteProperty'}).Name
         $kk = $jj.plays.tasks.hosts
     }
 
